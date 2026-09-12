@@ -1,0 +1,3 @@
+.feature-clock__value {
+  font-size: clamp(2rem, 5vw, 4rem);
+}
