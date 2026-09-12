@@ -13,3 +13,15 @@ id = "placeholder"
 feature = "placeholder"
 title = "Home Dashboard"
 col_span = 2
+
+[[tiles]]
+id = "interaction"
+feature = "interaction"
+title = "タッチ操作"
+col_span = 2
+
+[[tiles]]
+id = "scroll"
+feature = "scroll"
+title = "スクロール"
+col_span = 2

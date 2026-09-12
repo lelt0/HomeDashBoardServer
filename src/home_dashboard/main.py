@@ -26,3 +26,22 @@ async def index(request: Request) -> HTMLResponse:
 @app.get("/api/health")
 async def health() -> dict[str, str]:
     return {"status": "ok"}
+
+
+@app.get("/page/{feature}", response_class=HTMLResponse)
+async def feature_page(request: Request, feature: str) -> HTMLResponse:
+    titles = {
+        "interaction": "タッチ操作",
+        "placeholder": "Home Dashboard",
+    }
+    title = titles.get(feature)
+    if title is None:
+        from fastapi import HTTPException
+
+        raise HTTPException(status_code=404, detail="Feature not found")
+
+    return templates.TemplateResponse(
+        request=request,
+        name="pages/feature.html",
+        context={"title": title, "feature": feature},
+    )
