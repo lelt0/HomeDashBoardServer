@@ -139,3 +139,25 @@ a.button {
   .dashboard { grid-template-columns: 1fr; }
   .tile { grid-column: span 1; }
 }
+
+.fullscreen-toggle {
+  position: fixed;
+  top: max(10px, env(safe-area-inset-top));
+  right: max(10px, env(safe-area-inset-right));
+  z-index: 1000;
+  min-width: 76px;
+  opacity: 0.9;
+}
+
+:fullscreen {
+  background: #080808;
+}
+
+:-webkit-full-screen {
+  background: #080808;
+}
+
+body.is-fullscreen {
+  padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right))
+    max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+}
