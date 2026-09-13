@@ -10,6 +10,7 @@ def test_home_page() -> None:
     assert response.status_code == 200
     assert "Home Dashboard" in response.text
     assert "タッチ操作" in response.text
+    assert "display-power-save-marquee" in response.text
 
 
 def test_health() -> None:

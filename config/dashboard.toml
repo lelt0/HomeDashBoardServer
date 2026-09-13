@@ -1,3 +1,11 @@
+[display]
+# Webページを待機画面に切り替えるまでの無操作時間（秒）
+idle_timeout_seconds = 60
+# 待機画面に表示するメッセージ。{date}は現在日付に、{time} は現在時刻に置換する。
+idle_message = "{date}"
+# 待機画面の文字が移動する速度（ピクセル/秒）
+idle_marquee_speed_px_per_second = 20
+
 [dashboard]
 columns = 4
 gap_px = 10
