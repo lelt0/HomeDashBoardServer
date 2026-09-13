@@ -1,0 +1,23 @@
+.feature-tile-navigation__view {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.feature-tile-navigation__view[hidden] {
+  display: none !important;
+}
+
+.feature-tile-navigation__detail-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.feature-tile-navigation__detail-text {
+  margin: 0;
+  text-align: center;
+  line-height: 1.6;
+}
