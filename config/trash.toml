@@ -1,0 +1,40 @@
+cutover_time = "14:00"
+excluded_dates = []
+
+[types.burnable]
+label = "燃やすごみ"
+icon = "🔥"
+
+[types.can_plabottle]
+label = "缶・ペットボトル"
+icon = "🥤"
+
+[types.plastic]
+label = "プラスチック資源"
+icon = "♻️"
+
+[types.bin]
+label = "ビン（コンテナ）"
+icon = "🫙"
+
+[types.non_burnable]
+label = "不燃ごみ"
+icon = "💡"
+
+[types.paper]
+label = "資源"
+icon = "📦"
+
+[[rules]]
+weekday = "sunday"
+types = ["burnable"]
+
+[[rules]]
+weekday = "sunday"
+occurrences = [2, 4]
+types = ["can_plabottle"]
+
+[[rules]]
+weekday = "sunday"
+types = ["non_burnable"]
+

@@ -9,6 +9,11 @@ def test_home_page() -> None:
     response = client.get("/")
     assert response.status_code == 200
     assert "Home Dashboard" in response.text
+    assert 'class="tile tile--trash"' in response.text
+    assert 'data-feature="trash"' in response.text
+    assert "ごみ捨て" in response.text
+    assert "/static/features/trash/trash.css?v=3" in response.text
+    assert "tile--placeholder" not in response.text
     assert "タッチ操作" in response.text
     assert "display-power-save-marquee" in response.text
 

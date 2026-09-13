@@ -1,6 +1,6 @@
+import tomllib
 from pathlib import Path
 from typing import Any
-import tomllib
 
 from home_dashboard.features.registry import get_feature
 
