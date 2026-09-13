@@ -7,9 +7,9 @@
   <meta name="mobile-web-app-capable" content="yes">
   <title>Home Dashboard</title>
   <link rel="stylesheet" href="/static/css/main.css">
-  <link rel="stylesheet" href="/static/features/clock/clock.css">
-  <link rel="stylesheet" href="/static/features/interaction/interaction.css">
-  <link rel="stylesheet" href="/static/features/navigation/navigation.css">
+  {% for stylesheet in layout.assets.styles %}
+  <link rel="stylesheet" href="{{ stylesheet }}">
+  {% endfor %}
 </head>
 <body>
   <button
@@ -32,55 +32,14 @@
       aria-labelledby="title-{{ tile.id }}"
     >
       <div class="tile__header" id="title-{{ tile.id }}">{{ tile.title }}</div>
-
-      {% if tile.feature == "clock" %}
-      <div class="tile__body tile__body--center feature-clock__value" data-role="value">--:--:--</div>
-
-      {% elif tile.feature == "interaction" %}
-      <div class="tile__body tile__body--stack feature-interaction">
-        <div class="feature-interaction__value" data-role="counter">0</div>
-        <div class="feature-interaction__controls">
-          <button type="button" class="button" data-action="decrement" aria-label="減らす">−</button>
-          <button type="button" class="button" data-action="increment" aria-label="増やす">＋</button>
-        </div>
-        <label class="feature-interaction__slider-label">
-          明るさ
-          <input type="range" min="0" max="100" value="50" data-action="slider">
-        </label>
-        <div class="feature-interaction__slider-value" data-role="slider-value">50%</div>
-        <a class="button button--link" href="/page/interaction">詳細ページへ</a>
-      </div>
-
-      {% elif tile.feature == "scroll" %}
-      <div class="tile__body tile__body--scroll feature-scroll">
-        <p>タッチスクロール確認用の領域です。</p>
-        <p>家庭内のお知らせや長い予定一覧などでは、このようなスクロール可能な領域を使用します。</p>
-        <p>F-04Hで上下にスワイプして操作できます。</p>
-        <p>スクロール位置はこのページを離れるまで保持されます。</p>
-      </div>
-
-      {% else %}
-      <div class="tile__body tile__body--stack feature-tile-navigation">
-        <div class="feature-tile-navigation__view" data-tile-view="overview">
-          <div>Phase 3 / UI Demo</div>
-          <button type="button" class="button" data-action="tile-detail">詳細へ</button>
-        </div>
-        <div class="feature-tile-navigation__view" data-tile-view="detail" hidden>
-          <div class="feature-tile-navigation__detail-title">グリッド内の詳細表示</div>
-          <p class="feature-tile-navigation__detail-text">
-            この画面は別ページへ遷移せず、このグリッド内だけを切り替えています。
-          </p>
-          <button type="button" class="button" data-action="tile-detail-back">戻る</button>
-        </div>
-      </div>
-      {% endif %}
+      {% include tile.template %}
     </section>
     {% endfor %}
   </main>
 
-  <script src="/static/features/clock/clock.js"></script>
-  <script src="/static/features/interaction/interaction.js"></script>
   <script src="/static/features/display/fullscreen.js"></script>
-  <script src="/static/features/navigation/tile-navigation.js"></script>
+  {% for script in layout.assets.scripts %}
+  <script src="{{ script }}"></script>
+  {% endfor %}
 </body>
 </html>

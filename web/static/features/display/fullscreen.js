@@ -35,9 +35,11 @@
       'aria-label',
       fullscreen ? '全画面表示を解除' : '全画面表示'
     );
-    document.body.className = fullscreen
-      ? document.body.className.replace(/\bis-fullscreen\b/g, '') + ' is-fullscreen'
-      : document.body.className.replace(/\bis-fullscreen\b/g, '');
+    if (fullscreen) {
+      document.body.classList.add('is-fullscreen');
+    } else {
+      document.body.classList.remove('is-fullscreen');
+    }
   }
 
   button.addEventListener('click', function () {

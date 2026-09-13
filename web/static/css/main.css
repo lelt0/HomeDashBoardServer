@@ -39,6 +39,7 @@ a.button {
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  grid-column: span var(--tile-col-span, 1);
 }
 
 .tile__header {
@@ -74,10 +75,6 @@ a.button {
   -webkit-overflow-scrolling: touch;
 }
 
-.tile--clock { grid-column: span 2; }
-.tile--placeholder { grid-column: span 2; }
-.tile--interaction { grid-column: span 2; }
-.tile--scroll { grid-column: span 2; }
 
 .button {
   min-height: 44px;

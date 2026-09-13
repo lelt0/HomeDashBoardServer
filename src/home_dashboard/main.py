@@ -1,11 +1,12 @@
 from pathlib import Path
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 from home_dashboard.dashboard.layout import load_layout
+from home_dashboard.features.registry import get_feature
 
 BASE_DIR = Path(__file__).resolve().parents[2]
 
@@ -30,18 +31,16 @@ async def health() -> dict[str, str]:
 
 @app.get("/page/{feature}", response_class=HTMLResponse)
 async def feature_page(request: Request, feature: str) -> HTMLResponse:
-    titles = {
-        "interaction": "タッチ操作",
-        "placeholder": "Home Dashboard",
-    }
-    title = titles.get(feature)
-    if title is None:
-        from fastapi import HTTPException
+    try:
+        definition = get_feature(feature)
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail="Feature not found") from exc
 
-        raise HTTPException(status_code=404, detail="Feature not found")
+    if definition.page_template is None:
+        raise HTTPException(status_code=404, detail="Feature page not available")
 
     return templates.TemplateResponse(
         request=request,
-        name="pages/feature.html",
-        context={"title": title, "feature": feature},
+        name=definition.page_template,
+        context={"title": definition.title, "feature": feature},
     )
