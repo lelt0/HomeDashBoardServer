@@ -16,8 +16,8 @@ feature = "clock"
 col_span = 2
 
 [[tiles]]
-id = "trash"
-feature = "trash"
+id = "placeholder"
+feature = "placeholder"
 col_span = 2
 
 [[tiles]]

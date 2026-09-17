@@ -1,4 +1,3 @@
-from datetime import datetime
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, Request
@@ -8,7 +7,6 @@ from fastapi.templating import Jinja2Templates
 
 from home_dashboard.dashboard.layout import load_layout
 from home_dashboard.features.registry import get_feature
-from home_dashboard.features.trash import TRASH_CONFIG_PATH, load_trash_calendar
 
 BASE_DIR = Path(__file__).resolve().parents[2]
 
@@ -19,14 +17,10 @@ templates = Jinja2Templates(directory=BASE_DIR / "web" / "templates")
 
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request) -> HTMLResponse:
-    now = datetime.now()
     return templates.TemplateResponse(
         request=request,
         name="index.html",
-        context={
-            "layout": load_layout(),
-            "trash_calendar": load_trash_calendar(now, TRASH_CONFIG_PATH),
-        },
+        context={"layout": load_layout()},
     )
 
 

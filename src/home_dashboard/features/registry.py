@@ -17,12 +17,6 @@ FEATURES: dict[str, FeatureDefinition] = {
         styles=("/static/features/clock/clock.css",),
         scripts=("/static/features/clock/clock.js",),
     ),
-    "trash": FeatureDefinition(
-        title="ごみ捨て",
-        template="features/trash.html",
-        styles=("/static/features/trash/trash.css?v=3",),
-        scripts=("/static/features/trash/trash.js",),
-    ),
     "interaction": FeatureDefinition(
         title="タッチ操作",
         template="features/interaction.html",
