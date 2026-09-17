@@ -1,0 +1,62 @@
+<div
+  class="tile__body feature-trash"
+  data-feature-root="trash"
+  data-target-date="{{ tile.context.display.target_date }}"
+  data-switch-time="{{ tile.context.settings.display_switch_time }}"
+  data-calendar='{{ tile.context.calendar | tojson | forceescape }}'
+  tabindex="0"
+  role="button"
+  aria-label="ゴミ回収日。タップで詳細表示"
+>
+  <div class="feature-trash__view" data-trash-view="overview">
+    <div class="feature-trash__date" data-role="date">
+      {% if tile.context.display.is_tomorrow %}明日 {% endif %}
+      {{ tile.context.display.target_date[5:7]|int }}月{{ tile.context.display.target_date[8:10]|int }}日
+      {{ tile.context.display.weekday }}
+    </div>
+    <div class="feature-trash__collections" data-role="collections">
+      {% if tile.context.display.collections %}
+        {% for collection in tile.context.display.collections %}
+        <div class="feature-trash__collection">
+          <span class="feature-trash__icon" aria-hidden="true">{{ collection.icon }}</span>
+          <span>{{ collection.name }}</span>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="feature-trash__no-collection">回収なし</div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="feature-trash__view feature-trash__view--detail" data-trash-view="detail" hidden>
+    <div class="feature-trash__detail-title">ゴミ収集設定</div>
+    <div class="feature-trash__detail-scroll">
+      {% for trash_type in tile.context.settings.types %}
+      <div class="feature-trash__setting">
+        <div class="feature-trash__setting-name">
+          <span class="feature-trash__icon" aria-hidden="true">{{ trash_type.icon }}</span>
+          <span>{{ trash_type.name }}</span>
+        </div>
+        <div class="feature-trash__setting-rule">{{ trash_type.schedule_text }}</div>
+      </div>
+      {% endfor %}
+
+      <div class="feature-trash__setting">
+        <div class="feature-trash__setting-name">切替時刻</div>
+        <div class="feature-trash__setting-rule">
+          {{ tile.context.settings.display_switch_time }}
+        </div>
+      </div>
+
+      {% if tile.context.settings.exclusions %}
+      <div class="feature-trash__setting">
+        <div class="feature-trash__setting-name">回収除外日</div>
+        {% for exclusion in tile.context.settings.exclusions %}
+        <div class="feature-trash__setting-rule">{{ exclusion }}</div>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+    <div class="feature-trash__detail-hint">タップで戻る</div>
+  </div>
+</div>

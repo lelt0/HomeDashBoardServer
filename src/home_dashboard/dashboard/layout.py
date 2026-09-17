@@ -18,6 +18,10 @@ def load_layout() -> dict[str, Any]:
         feature = get_feature(tile["feature"])
         tile["title"] = feature.title
         tile["template"] = feature.template
+        if feature.context_factory is not None:
+            tile["context"] = feature.context_factory()
+        else:
+            tile.pop("context", None)
 
         for asset in feature.styles:
             if asset not in styles:

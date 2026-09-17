@@ -1,4 +1,7 @@
 from dataclasses import dataclass
+from typing import Any, Callable
+
+from home_dashboard.features.trash import load_feature_context
 
 
 @dataclass(frozen=True)
@@ -8,6 +11,7 @@ class FeatureDefinition:
     styles: tuple[str, ...] = ()
     scripts: tuple[str, ...] = ()
     page_template: str | None = None
+    context_factory: Callable[[], dict[str, Any]] | None = None
 
 
 FEATURES: dict[str, FeatureDefinition] = {
@@ -34,6 +38,13 @@ FEATURES: dict[str, FeatureDefinition] = {
         styles=("/static/features/navigation/navigation.css",),
         scripts=("/static/features/navigation/tile-navigation.js",),
         page_template="pages/features/placeholder.html",
+    ),
+    "trash": FeatureDefinition(
+        title="ゴミ回収日",
+        template="features/trash.html",
+        styles=("/static/features/trash/trash.css",),
+        scripts=("/static/features/trash/trash.js",),
+        context_factory=load_feature_context,
     ),
 }
 

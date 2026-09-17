@@ -1,0 +1,58 @@
+[trash]
+# [display_switch_time]より前は当日、それ以降は翌日の回収予定を表示します。
+# "HH:MM" 形式で変更できます。
+display_switch_time = "08:00"
+
+[[trash.types]]
+id = "burnable"
+name = "燃やすごみ"
+icon = "🔥"
+schedule = [
+  { type = "weekly", weekdays = ["mon", "thu"] },
+]
+
+[[trash.types]]
+id = "bin"
+name = "ビン（コンテナ）"
+icon = "🫙"
+schedule = [
+  { type = "nth_weekday", weekday = "wed", nth = [1, 3] },
+]
+
+[[trash.types]]
+id = "non-burnable"
+name = "不燃ごみ"
+icon = "💡"
+schedule = [
+  { type = "weekly", weekdays = ["fri"] },
+]
+
+[[trash.types]]
+id = "paper"
+name = "紙など資源"
+icon = "📦"
+schedule = [
+  { type = "nth_weekday", weekday = "fri", nth = [2, 4] },
+]
+
+[[trash.types]]
+id = "plastic"
+name = "プラ資源"
+icon = "♻️"
+schedule = [
+  { type = "weekly", weekdays = ["wed"] },
+]
+
+[[trash.types]]
+id = "bottle_can"
+name = "ペットボトル・缶"
+icon = "🥤"
+schedule = [
+  { type = "weekly", weekdays = ["tue"] },
+]
+
+# 年を付けない場合は毎年適用します。
+# 年を付けた場合は、その年だけ適用します。
+[[trash.exclusions]]
+start = "12/30"
+end = "1/3"
