@@ -13,13 +13,6 @@
   {% endfor %}
 </head>
 <body>
-  <button
-    type="button"
-    class="button fullscreen-toggle"
-    data-action="fullscreen"
-    aria-label="全画面表示"
-  >全画面</button>
-
   <div
     class="display-power-save"
     data-role="display-power-save"
@@ -49,7 +42,6 @@
     {% endfor %}
   </main>
 
-  <script src="/static/features/display/fullscreen.js"></script>
   <script src="/static/features/display/power-save.js"></script>
   {% for script in layout.assets.scripts %}
   <script src="{{ script }}"></script>
