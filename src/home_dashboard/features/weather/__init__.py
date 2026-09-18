@@ -293,14 +293,14 @@ def _rain_icon(
 ) -> str:
     max_precipitation = max(item["precipitation"] for item in values)
     if any(item["weather_code"] in {71, 73, 75, 77, 85, 86} for item in values):
-        return "❄"
+        return "❄️"
     if max_precipitation <= settings["no_rain_max_mm_per_hour"]:
         if any(item["weather_code"] == 3 for item in values):
-            return "☁"
-        return "☀"
+            return "☁️"
+        return "☀️"
     if max_precipitation <= settings["light_rain_max_mm_per_hour"]:
         return "🌂"
-    return "☂"
+    return "☂️"
 
 
 def _period_label(start: datetime, end: datetime) -> str:
