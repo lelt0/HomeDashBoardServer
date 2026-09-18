@@ -1,3 +1,11 @@
+@font-face {
+  font-family: "HomeDashboardEmoji";
+  src: url("/static/fonts/NotoColorEmoji-weather.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
 .feature-weather {
   position: relative;
   overflow: hidden;
@@ -37,6 +45,7 @@
 }
 
 .feature-weather__umbrella {
+  font-family: "HomeDashboardEmoji", sans-serif;
   font-size: clamp(4rem, 9vw, 7rem);
   line-height: 1;
 }
@@ -110,6 +119,7 @@
 
 .feature-weather__day-icon {
   margin-top: 5px;
+  font-family: "HomeDashboardEmoji", sans-serif;
   font-size: clamp(1.7rem, 3.8vw, 3rem);
   line-height: 1.1;
 }
