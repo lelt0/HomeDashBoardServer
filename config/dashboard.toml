@@ -18,6 +18,11 @@ feature = "trash"
 col_span = 2
 
 [[tiles]]
+id = "weather"
+feature = "weather"
+col_span = 2
+
+[[tiles]]
 id = "interaction"
 feature = "interaction"
 col_span = 2

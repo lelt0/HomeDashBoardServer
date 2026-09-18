@@ -6,13 +6,17 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
 from home_dashboard.dashboard.layout import load_layout
-from home_dashboard.features.registry import get_feature
+from home_dashboard.features.registry import FEATURES, get_feature
 
 BASE_DIR = Path(__file__).resolve().parents[2]
 
 app = FastAPI(title="Home Dashboard")
 app.mount("/static", StaticFiles(directory=BASE_DIR / "web" / "static"), name="static")
 templates = Jinja2Templates(directory=BASE_DIR / "web" / "templates")
+
+for definition in FEATURES.values():
+    if definition.router is not None:
+        app.include_router(definition.router)
 
 
 @app.get("/", response_class=HTMLResponse)

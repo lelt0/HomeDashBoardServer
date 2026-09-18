@@ -1,7 +1,11 @@
 from dataclasses import dataclass
 from typing import Any, Callable
 
+from fastapi import APIRouter
+
 from home_dashboard.features.trash import load_feature_context
+from home_dashboard.features.weather import load_feature_context as load_weather_feature_context
+from home_dashboard.features.weather import router as weather_router
 
 
 @dataclass(frozen=True)
@@ -12,6 +16,7 @@ class FeatureDefinition:
     scripts: tuple[str, ...] = ()
     page_template: str | None = None
     context_factory: Callable[[], dict[str, Any]] | None = None
+    router: APIRouter | None = None
 
 
 FEATURES: dict[str, FeatureDefinition] = {
@@ -38,6 +43,14 @@ FEATURES: dict[str, FeatureDefinition] = {
         styles=("/static/features/navigation/navigation.css",),
         scripts=("/static/features/navigation/tile-navigation.js",),
         page_template="pages/features/placeholder.html",
+    ),
+    "weather": FeatureDefinition(
+        title="天気予報",
+        template="features/weather.html",
+        styles=("/static/features/weather/weather.css",),
+        scripts=("/static/features/weather/weather.js",),
+        context_factory=load_weather_feature_context,
+        router=weather_router,
     ),
     "trash": FeatureDefinition(
         title="ゴミ回収日",

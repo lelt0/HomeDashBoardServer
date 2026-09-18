@@ -1,0 +1,31 @@
+<div
+  class="tile__body feature-weather"
+  data-feature-root="weather"
+  data-region="{{ tile.context.settings.region }}"
+  tabindex="0"
+  role="button"
+  aria-label="天気予報。タップで1週間予報を表示"
+>
+  <div class="feature-weather__view feature-weather__view--overview" data-weather-view="overview">
+    <div class="feature-weather__period" data-role="period">{{ tile.context.settings.region }}の 雨予想</div>
+    <div class="feature-weather__umbrella" data-role="umbrella">--</div>
+    <div class="feature-weather__stats">
+      <div class="feature-weather__stat">
+        <span class="feature-weather__stat-label">最大降水確率</span>
+        <span class="feature-weather__stat-value" data-role="max-probability">--</span>
+      </div>
+      <div class="feature-weather__stat">
+        <span class="feature-weather__stat-label">最大降水量</span>
+        <span class="feature-weather__stat-value" data-role="max-precipitation">--</span>
+      </div>
+    </div>
+    <div class="feature-weather__error" data-role="error" hidden></div>
+  </div>
+
+  <div class="feature-weather__view feature-weather__view--detail" data-weather-view="detail" hidden>
+    <div class="feature-weather__detail-title">今後1週間</div>
+    <div class="feature-weather__days" data-role="days"></div>
+    <div class="feature-weather__fetched" data-role="fetched">最終取得: --</div>
+    <div class="feature-weather__attribution">気象データ: Open-Meteo.com（CC BY 4.0）</div>
+  </div>
+</div>
