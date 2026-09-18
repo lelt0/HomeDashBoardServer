@@ -11,3 +11,10 @@ longitude = 135.19
 no_rain_max_mm_per_hour = 0.0
 # 最大降水量がこの値以下なら「パラパラ雨（🌂）」、超えると「雨（☂）」です。
 light_rain_max_mm_per_hour = 2.0
+
+# 天気アイコンに応じたグリッド背景色。
+[weather.background]
+sunny = "#151515"
+cloudy = "#151515"
+light_rain = "#10191b"
+rain = "#0f1820"

@@ -28,10 +28,23 @@
 
   function setRainClass(root, icon) {
     root.className = root.className
-      .replace(/\sfeature-weather--(?:sunny|light-rain|rain)\b/g, '');
+      .replace(/\sfeature-weather--(?:sunny|cloudy|light-rain|rain)\b/g, '');
     if (icon === '☀') root.classList.add('feature-weather--sunny');
+    else if (icon === '☁') root.classList.add('feature-weather--cloudy');
     else if (icon === '🌂') root.classList.add('feature-weather--light-rain');
     else if (icon === '☂') root.classList.add('feature-weather--rain');
+  }
+
+  function setBackgroundColor(root, icon) {
+    var colors = {
+      '☀': root.getAttribute('data-bg-sunny'),
+      '☁': root.getAttribute('data-bg-cloudy'),
+      '🌂': root.getAttribute('data-bg-light-rain'),
+      '☂': root.getAttribute('data-bg-rain')
+    };
+    var color = colors[icon];
+    if (color) root.style.backgroundColor = color;
+    else root.style.removeProperty('background-color');
   }
 
   function renderDays(daysElement, days) {
@@ -43,7 +56,14 @@
 
       var date = document.createElement('div');
       date.className = 'feature-weather__day-date';
-      date.textContent = formatDay(item);
+      date.textContent = item.month + '月' + item.day + '日 ';
+
+      var weekday = document.createElement('span');
+      weekday.className = 'feature-weather__weekday';
+      if (item.weekday === '土') weekday.classList.add('feature-weather__weekday--sat');
+      else if (item.weekday === '日') weekday.classList.add('feature-weather__weekday--sun');
+      weekday.textContent = item.weekday;
+      date.appendChild(weekday);
 
       var icon = document.createElement('div');
       icon.className = 'feature-weather__day-icon';
@@ -94,6 +114,7 @@
       maxProbability.textContent = formatProbability(current.max_precipitation_probability);
       maxPrecipitation.textContent = formatPrecipitation(current.max_precipitation_mm_per_hour);
       setRainClass(root, current.icon);
+      setBackgroundColor(root, current.icon);
       renderDays(days, data.daily);
       fetched.textContent = '最終取得: ' + formatDateTime(fetchedAt);
       lastFetchedAt = new Date(fetchedAt);

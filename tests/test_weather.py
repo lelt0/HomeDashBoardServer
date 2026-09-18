@@ -12,6 +12,12 @@ def _settings(**overrides: object) -> dict:
         "longitude": 135.0,
         "no_rain_max_mm_per_hour": 0.0,
         "light_rain_max_mm_per_hour": 2.0,
+        "background": {
+            "sunny": "#151515",
+            "cloudy": "#151515",
+            "light_rain": "#10191b",
+            "rain": "#0f1820",
+        },
     }
     settings.update(overrides)
     return settings
@@ -19,16 +25,41 @@ def _settings(**overrides: object) -> dict:
 
 def test_rain_icon_thresholds_are_configurable() -> None:
     settings = _settings()
-    assert weather_module._rain_icon(0.0, settings) == "☀"
-    assert weather_module._rain_icon(0.1, settings) == "🌂"
-    assert weather_module._rain_icon(2.0, settings) == "🌂"
-    assert weather_module._rain_icon(2.1, settings) == "☂"
+    clear = [{"precipitation": 0.0, "probability": 0.0, "weather_code": 0}]
+    cloudy = [{"precipitation": 0.0, "probability": 0.0, "weather_code": 3}]
+    assert weather_module._rain_icon(clear, settings) == "☀"
+    assert weather_module._rain_icon(cloudy, settings) == "☁"
+    assert weather_module._rain_icon(
+        [{"precipitation": 0.1, "probability": 10.0, "weather_code": 61}], settings
+    ) == "🌂"
+    assert weather_module._rain_icon(
+        [{"precipitation": 2.0, "probability": 20.0, "weather_code": 61}], settings
+    ) == "🌂"
+    assert weather_module._rain_icon(
+        [{"precipitation": 2.1, "probability": 30.0, "weather_code": 61}], settings
+    ) == "☂"
 
     custom = _settings(no_rain_max_mm_per_hour=0.2, light_rain_max_mm_per_hour=3.5)
-    assert weather_module._rain_icon(0.2, custom) == "☀"
-    assert weather_module._rain_icon(0.21, custom) == "🌂"
-    assert weather_module._rain_icon(3.5, custom) == "🌂"
-    assert weather_module._rain_icon(3.51, custom) == "☂"
+    assert weather_module._rain_icon(
+        [{"precipitation": 0.2, "probability": 0.0, "weather_code": 0}], custom
+    ) == "☀"
+    assert weather_module._rain_icon(
+        [{"precipitation": 0.21, "probability": 0.0, "weather_code": 0}], custom
+    ) == "🌂"
+    assert weather_module._rain_icon(
+        [{"precipitation": 3.5, "probability": 0.0, "weather_code": 61}], custom
+    ) == "🌂"
+    assert weather_module._rain_icon(
+        [{"precipitation": 3.51, "probability": 0.0, "weather_code": 61}], custom
+    ) == "☂"
+
+
+def test_background_colors_are_loaded() -> None:
+    settings = weather_module._load_settings()
+    assert settings["background"]["sunny"] == "#151515"
+    assert settings["background"]["cloudy"] == "#151515"
+    assert settings["background"]["light_rain"] == "#10191b"
+    assert settings["background"]["rain"] == "#0f1820"
 
 
 def test_period_label_crosses_midnight() -> None:
@@ -54,9 +85,13 @@ def test_extract_six_hour_values_uses_end_of_interval_for_precipitation() -> Non
     ]
     precipitation = [99, 1, 2, 3, 4, 5, 6]
     probability = [99, 10, 20, 30, 40, 50, 60]
-    values = weather_module._extract_six_hour_values(times, precipitation, probability, start)
+    weather_codes = [0, 1, 2, 3, 61, 0, 0]
+    values = weather_module._extract_six_hour_values(
+        times, precipitation, probability, weather_codes, start
+    )
     assert [item["precipitation"] for item in values] == [1.0, 2.0, 3.0, 4.0, 5.0, 6.0]
     assert [item["probability"] for item in values] == [10.0, 20.0, 30.0, 40.0, 50.0, 60.0]
+    assert [item["weather_code"] for item in values] == [1, 2, 3, 61, 0, 0]
 
 
 def test_build_display_data_returns_seven_days() -> None:
@@ -64,20 +99,24 @@ def test_build_display_data_returns_seven_days() -> None:
     hourly_times = []
     precipitation = []
     probability = []
+    hourly_weather_codes = []
     for hour in range(13, 24):
         hourly_times.append(f"2026-09-18T{hour:02d}:00")
         precipitation.append(0.0)
         probability.append(10)
+        hourly_weather_codes.append(3)
     for hour in range(24):
         hourly_times.append(f"2026-09-19T{hour:02d}:00")
         precipitation.append(0.0)
         probability.append(10)
+        hourly_weather_codes.append(3)
 
     payload = {
         "hourly": {
             "time": hourly_times,
             "precipitation": precipitation,
             "precipitation_probability": probability,
+            "weather_code": hourly_weather_codes,
         },
         "daily": {
             "time": [
@@ -96,7 +135,7 @@ def test_build_display_data_returns_seven_days() -> None:
     data = weather_module._build_display_data(payload, _settings(), fetched_at)
     assert data["region"] == "テスト地域"
     assert data["period"]["label"] == "13～19時"
-    assert data["current"]["icon"] == "☀"
+    assert data["current"]["icon"] == "☁"
     assert data["current"]["max_precipitation_mm_per_hour"] == 0.0
     assert data["current"]["max_precipitation_probability"] == 10.0
     assert len(data["daily"]) == 7
@@ -110,12 +149,14 @@ def test_weather_endpoint_returns_forecast(monkeypatch) -> None:
     hourly_times = []
     precipitation = []
     probability = []
+    hourly_weather_codes = []
     start = now.replace(hour=0, minute=0, second=0, microsecond=0)
     for offset in range(168):
         point = start + weather_module.timedelta(hours=offset)
         hourly_times.append(point.strftime("%Y-%m-%dT%H:%M"))
         precipitation.append(0.0)
         probability.append(5)
+        hourly_weather_codes.append(3)
 
     daily_times = [(start.date() + weather_module.timedelta(days=i)).isoformat() for i in range(7)]
     payload = {
@@ -123,6 +164,7 @@ def test_weather_endpoint_returns_forecast(monkeypatch) -> None:
             "time": hourly_times,
             "precipitation": precipitation,
             "precipitation_probability": probability,
+            "weather_code": hourly_weather_codes,
         },
         "daily": {
             "time": daily_times,
@@ -136,4 +178,4 @@ def test_weather_endpoint_returns_forecast(monkeypatch) -> None:
     assert result["ok"] is True
     assert result["data"]["region"] == "神戸東部"
     assert len(result["data"]["daily"]) == 7
-    assert result["data"]["current"]["icon"] == "☀"
+    assert result["data"]["current"]["icon"] == "☁"

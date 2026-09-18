@@ -11,17 +11,6 @@
   outline: none;
 }
 
-.feature-weather--sunny {
-  background: #151515;
-}
-
-.feature-weather--light-rain {
-  background: #10191b;
-}
-
-.feature-weather--rain {
-  background: #0f1820;
-}
 
 .feature-weather__view {
   width: 100%;
@@ -109,6 +98,14 @@
 .feature-weather__day-date {
   font-size: clamp(0.68rem, 1.3vw, 0.9rem);
   white-space: nowrap;
+}
+
+.feature-weather__weekday--sat {
+  color: #6ea8dc;
+}
+
+.feature-weather__weekday--sun {
+  color: #e07a7a;
 }
 
 .feature-weather__day-icon {

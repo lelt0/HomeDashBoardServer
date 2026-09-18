@@ -84,6 +84,17 @@ def _load_settings() -> dict[str, Any]:
 
     no_rain_threshold = float(raw.get("no_rain_max_mm_per_hour", 0.0))
     light_rain_threshold = float(raw.get("light_rain_max_mm_per_hour", 2.0))
+    background = raw.get("background", {})
+    if not isinstance(background, dict):
+        raise ValueError("[weather.background] must be a table")
+
+    background_colors = {
+        "sunny": str(background.get("sunny", "#151515")),
+        "cloudy": str(background.get("cloudy", "#151515")),
+        "light_rain": str(background.get("light_rain", "#10191b")),
+        "rain": str(background.get("rain", "#0f1820")),
+    }
+
     if no_rain_threshold < 0:
         raise ValueError("weather.no_rain_max_mm_per_hour must be >= 0")
     if light_rain_threshold < no_rain_threshold:
@@ -98,6 +109,7 @@ def _load_settings() -> dict[str, Any]:
         "longitude": longitude,
         "no_rain_max_mm_per_hour": no_rain_threshold,
         "light_rain_max_mm_per_hour": light_rain_threshold,
+        "background": background_colors,
     }
 
 
@@ -154,7 +166,7 @@ def _fetch_forecast(
         {
             "latitude": settings["latitude"],
             "longitude": settings["longitude"],
-            "hourly": "precipitation,precipitation_probability",
+            "hourly": "precipitation,precipitation_probability,weather_code",
             "daily": "weather_code",
             "forecast_days": 7,
             "timezone": TIMEZONE_NAME,
@@ -180,6 +192,7 @@ def _build_display_data(
     hourly_times = hourly.get("time")
     precipitation = hourly.get("precipitation")
     precipitation_probability = hourly.get("precipitation_probability")
+    hourly_weather_codes = hourly.get("weather_code")
     daily_times = daily.get("time")
     daily_weather_codes = daily.get("weather_code")
 
@@ -192,6 +205,11 @@ def _build_display_data(
         and len(precipitation_probability) != len(hourly_times)
     ):
         raise ValueError("Open-Meteo precipitation probability array is invalid")
+    if (
+        not isinstance(hourly_weather_codes, list)
+        or len(hourly_weather_codes) != len(hourly_times)
+    ):
+        raise ValueError("Open-Meteo hourly weather code array is invalid")
     if not isinstance(daily_times, list) or not isinstance(daily_weather_codes, list):
         raise ValueError("Open-Meteo daily data is invalid")
     if len(daily_times) != len(daily_weather_codes):
@@ -204,11 +222,12 @@ def _build_display_data(
         hourly_times,
         precipitation,
         precipitation_probability,
+        hourly_weather_codes,
         start,
     )
     max_precipitation = max(item["precipitation"] for item in values)
     max_probability = _max_or_none(item["probability"] for item in values)
-    icon = _rain_icon(max_precipitation, settings)
+    icon = _rain_icon(values, settings)
 
     return {
         "region": settings["region"],
@@ -230,10 +249,11 @@ def _extract_six_hour_values(
     hourly_times: list[Any],
     precipitation: list[Any],
     precipitation_probability: list[Any] | None,
+    weather_codes: list[Any],
     start: datetime,
-) -> list[dict[str, float | None]]:
+) -> list[dict[str, float | int | None]]:
     time_to_index = {str(value): index for index, value in enumerate(hourly_times)}
-    values: list[dict[str, float | None]] = []
+    values: list[dict[str, float | int | None]] = []
 
     # Open-Meteo's precipitation value at HH:00 represents the preceding hour.
     # Therefore, the interval start..start+1h is represented by the value at start+1h.
@@ -250,7 +270,15 @@ def _extract_six_hour_values(
         if precipitation_probability is not None:
             raw_probability = precipitation_probability[index]
             probability = float(raw_probability) if raw_probability is not None else None
-        values.append({"precipitation": amount, "probability": probability})
+        raw_weather_code = weather_codes[index]
+        weather_code = int(raw_weather_code) if raw_weather_code is not None else 0
+        values.append(
+            {
+                "precipitation": amount,
+                "probability": probability,
+                "weather_code": weather_code,
+            }
+        )
 
     return values
 
@@ -260,8 +288,13 @@ def _max_or_none(values: Any) -> float | None:
     return max(numeric) if numeric else None
 
 
-def _rain_icon(max_precipitation: float, settings: dict[str, Any]) -> str:
+def _rain_icon(
+    values: list[dict[str, float | int | None]], settings: dict[str, Any]
+) -> str:
+    max_precipitation = max(item["precipitation"] for item in values)
     if max_precipitation <= settings["no_rain_max_mm_per_hour"]:
+        if any(item["weather_code"] == 3 for item in values):
+            return "☁"
         return "☀"
     if max_precipitation <= settings["light_rain_max_mm_per_hour"]:
         return "🌂"
