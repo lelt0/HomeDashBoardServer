@@ -5,7 +5,7 @@ def test_layout_has_tiles() -> None:
     layout = load_layout()
     assert layout["dashboard"]["columns"] == 4
     assert [tile["id"] for tile in layout["tiles"]] == [
-        "clock",
+        "weather",
         "trash",
         "interaction",
         "scroll",

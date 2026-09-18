@@ -1,0 +1,125 @@
+.feature-weather {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+  transition: background-color 0.2s ease;
+}
+
+.feature-weather:focus {
+  outline: none;
+}
+
+
+.feature-weather__view {
+  width: 100%;
+  height: 100%;
+}
+
+.feature-weather__view[hidden] {
+  display: none !important;
+}
+
+.feature-weather__view--overview {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(6px, 1.3vw, 12px);
+  text-align: center;
+}
+
+.feature-weather__period {
+  color: #d0d0d0;
+  font-size: clamp(1rem, 2vw, 1.5rem);
+  line-height: 1.3;
+}
+
+.feature-weather__umbrella {
+  font-size: clamp(4rem, 9vw, 7rem);
+  line-height: 1;
+}
+
+.feature-weather__stats {
+  display: flex;
+  justify-content: center;
+  gap: clamp(12px, 3vw, 28px);
+  width: 100%;
+}
+
+.feature-weather__stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.feature-weather__stat-label {
+  color: #999;
+  font-size: clamp(0.7rem, 1.4vw, 0.95rem);
+}
+
+.feature-weather__stat-value {
+  font-size: clamp(1.25rem, 2.7vw, 2rem);
+  font-variant-numeric: tabular-nums;
+}
+
+.feature-weather__error {
+  color: #d8a4a4;
+  font-size: clamp(0.75rem, 1.4vw, 0.9rem);
+}
+
+.feature-weather__view--detail {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(7px, 1vw, 12px);
+  text-align: center;
+}
+
+.feature-weather__detail-title {
+  color: #c0c0c0;
+  font-size: clamp(0.85rem, 1.6vw, 1.1rem);
+}
+
+.feature-weather__days {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 3px;
+  width: 100%;
+}
+
+.feature-weather__day {
+  min-width: 0;
+  padding: 4px 1px;
+}
+
+.feature-weather__day-date {
+  font-size: clamp(0.68rem, 1.3vw, 0.9rem);
+  white-space: nowrap;
+}
+
+.feature-weather__day-date--sat {
+  color: #6ea8dc;
+}
+
+.feature-weather__day-date--sun {
+  color: #e07a7a;
+}
+
+.feature-weather__day-icon {
+  margin-top: 5px;
+  font-size: clamp(1.7rem, 3.8vw, 3rem);
+  line-height: 1.1;
+}
+
+.feature-weather__fetched {
+  color: #888;
+  font-size: clamp(0.62rem, 1.15vw, 0.8rem);
+}
+
+.feature-weather__attribution {
+  color: #666;
+  font-size: clamp(0.56rem, 1vw, 0.68rem);
+}

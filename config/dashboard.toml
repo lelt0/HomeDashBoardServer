@@ -8,8 +8,8 @@ columns = 4
 gap_px = 10
 
 [[tiles]]
-id = "clock"
-feature = "clock"
+id = "weather"
+feature = "weather"
 col_span = 2
 
 [[tiles]]
