@@ -100,11 +100,11 @@
   white-space: nowrap;
 }
 
-.feature-weather__weekday--sat {
+.feature-weather__day-date--sat {
   color: #6ea8dc;
 }
 
-.feature-weather__weekday--sun {
+.feature-weather__day-date--sun {
   color: #e07a7a;
 }
 

@@ -1,4 +1,5 @@
 from datetime import datetime, timezone
+from pathlib import Path
 import home_dashboard.features.weather as weather_module
 
 
@@ -30,6 +31,12 @@ def test_rain_icon_thresholds_are_configurable() -> None:
     assert weather_module._rain_icon(clear, settings) == "☀"
     assert weather_module._rain_icon(cloudy, settings) == "☁"
     assert weather_module._rain_icon(
+        [{"precipitation": 1.0, "probability": 10.0, "weather_code": 71}], settings
+    ) == "❄"
+    assert weather_module._rain_icon(
+        [{"precipitation": 0.0, "probability": 0.0, "weather_code": 71}], settings
+    ) == "❄"
+    assert weather_module._rain_icon(
         [{"precipitation": 0.1, "probability": 10.0, "weather_code": 61}], settings
     ) == "🌂"
     assert weather_module._rain_icon(
@@ -52,6 +59,14 @@ def test_rain_icon_thresholds_are_configurable() -> None:
     assert weather_module._rain_icon(
         [{"precipitation": 3.51, "probability": 0.0, "weather_code": 61}], custom
     ) == "☂"
+
+
+def test_weekend_color_is_applied_to_the_full_date_string() -> None:
+    js = Path("web/static/features/weather/weather.js").read_text()
+    assert "feature-weather__day-date--sat" in js
+    assert "feature-weather__day-date--sun" in js
+    assert "feature-weather__weekday--sat" not in js
+    assert "feature-weather__weekday--sun" not in js
 
 
 def test_background_colors_are_loaded() -> None:

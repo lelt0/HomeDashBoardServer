@@ -56,14 +56,9 @@
 
       var date = document.createElement('div');
       date.className = 'feature-weather__day-date';
-      date.textContent = item.month + '月' + item.day + '日 ';
-
-      var weekday = document.createElement('span');
-      weekday.className = 'feature-weather__weekday';
-      if (item.weekday === '土') weekday.classList.add('feature-weather__weekday--sat');
-      else if (item.weekday === '日') weekday.classList.add('feature-weather__weekday--sun');
-      weekday.textContent = item.weekday;
-      date.appendChild(weekday);
+      if (item.weekday === '土') date.classList.add('feature-weather__day-date--sat');
+      else if (item.weekday === '日') date.classList.add('feature-weather__day-date--sun');
+      date.textContent = formatDay(item);
 
       var icon = document.createElement('div');
       icon.className = 'feature-weather__day-icon';

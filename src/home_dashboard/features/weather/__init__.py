@@ -292,6 +292,8 @@ def _rain_icon(
     values: list[dict[str, float | int | None]], settings: dict[str, Any]
 ) -> str:
     max_precipitation = max(item["precipitation"] for item in values)
+    if any(item["weather_code"] in {71, 73, 75, 77, 85, 86} for item in values):
+        return "❄"
     if max_precipitation <= settings["no_rain_max_mm_per_hour"]:
         if any(item["weather_code"] == 3 for item in values):
             return "☁"
