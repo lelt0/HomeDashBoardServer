@@ -22,10 +22,6 @@
     return Math.round(Number(value)) + '%';
   }
 
-  function formatDay(item) {
-    return item.month + '月' + item.day + '日 ' + item.weekday;
-  }
-
   function setRainClass(root, icon) {
     root.className = root.className
       .replace(/\sfeature-weather--(?:sunny|cloudy|light-rain|rain)\b/g, '');
@@ -47,27 +43,40 @@
     else root.style.removeProperty('background-color');
   }
 
-  function renderDays(daysElement, days) {
-    daysElement.innerHTML = '';
-    for (var i = 0; i < days.length; i += 1) {
-      var item = days[i];
-      var day = document.createElement('div');
-      day.className = 'feature-weather__day';
+  function renderHours(hoursElement, hours) {
+    hoursElement.innerHTML = '';
+    for (var i = 0; i < hours.length; i += 1) {
+      var item = hours[i];
+      var hour = document.createElement('div');
+      hour.className = 'feature-weather__hour';
 
-      var date = document.createElement('div');
-      date.className = 'feature-weather__day-date';
-      if (item.weekday === '土') date.classList.add('feature-weather__day-date--sat');
-      else if (item.weekday === '日') date.classList.add('feature-weather__day-date--sun');
-      date.textContent = formatDay(item);
+      var label = document.createElement('div');
+      label.className = 'feature-weather__hour-label';
+      label.textContent = item.label;
 
       var icon = document.createElement('div');
-      icon.className = 'feature-weather__day-icon';
+      icon.className = 'feature-weather__hour-icon';
       icon.textContent = item.icon;
       icon.setAttribute('aria-hidden', 'true');
 
-      day.appendChild(date);
-      day.appendChild(icon);
-      daysElement.appendChild(day);
+      var stats = document.createElement('div');
+      stats.className = 'feature-weather__hour-stats';
+
+      var precipitation = document.createElement('div');
+      precipitation.className = 'feature-weather__hour-precipitation';
+      precipitation.textContent = formatPrecipitation(item.precipitation_mm_per_hour);
+
+      var probability = document.createElement('div');
+      probability.className = 'feature-weather__hour-probability';
+      probability.textContent = formatProbability(item.precipitation_probability);
+
+      stats.appendChild(precipitation);
+      stats.appendChild(probability);
+
+      hour.appendChild(label);
+      hour.appendChild(icon);
+      hour.appendChild(stats);
+      hoursElement.appendChild(hour);
     }
   }
 
@@ -79,8 +88,7 @@
     var maxProbability = root.querySelector('[data-role="max-probability"]');
     var maxPrecipitation = root.querySelector('[data-role="max-precipitation"]');
     var error = root.querySelector('[data-role="error"]');
-    var days = root.querySelector('[data-role="days"]');
-    var fetched = root.querySelector('[data-role="fetched"]');
+    var hours = root.querySelector('[data-role="hours"]');
 
     var detailTimer = null;
     var retryTimer = null;
@@ -110,8 +118,7 @@
       maxPrecipitation.textContent = formatPrecipitation(current.max_precipitation_mm_per_hour);
       setRainClass(root, current.icon);
       setBackgroundColor(root, current.icon);
-      renderDays(days, data.daily);
-      fetched.textContent = '最終取得: ' + formatDateTime(fetchedAt);
+      renderHours(hours, data.hours);
       lastFetchedAt = new Date(fetchedAt);
       hasData = true;
       updateStaleState();

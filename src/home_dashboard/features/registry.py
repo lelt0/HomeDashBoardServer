@@ -45,7 +45,7 @@ FEATURES: dict[str, FeatureDefinition] = {
         page_template="pages/features/placeholder.html",
     ),
     "weather": FeatureDefinition(
-        title="６時間天気",
+        title="天気予報",
         template="features/weather.html",
         styles=("/static/features/weather/weather.css",),
         scripts=("/static/features/weather/weather.js",),

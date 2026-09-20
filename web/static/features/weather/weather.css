@@ -19,7 +19,6 @@
   outline: none;
 }
 
-
 .feature-weather__view {
   width: 100%;
   height: 100%;
@@ -92,41 +91,49 @@
   font-size: clamp(0.85rem, 1.6vw, 1.1rem);
 }
 
-.feature-weather__days {
+.feature-weather__hours {
   display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 3px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(5px, 1vw, 10px);
   width: 100%;
 }
 
-.feature-weather__day {
+.feature-weather__hour {
   min-width: 0;
-  padding: 4px 1px;
+  min-height: 0;
+  padding: clamp(5px, 1vw, 8px);
+  border: 1px solid #2f2f2f;
+  border-radius: 8px;
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  align-items: center;
+  column-gap: clamp(5px, 1vw, 9px);
 }
 
-.feature-weather__day-date {
-  font-size: clamp(0.68rem, 1.3vw, 0.9rem);
+.feature-weather__hour-label {
+  color: #c0c0c0;
+  font-size: clamp(0.72rem, 1.25vw, 0.88rem);
   white-space: nowrap;
 }
 
-.feature-weather__day-date--sat {
-  color: #6ea8dc;
-}
-
-.feature-weather__day-date--sun {
-  color: #e07a7a;
-}
-
-.feature-weather__day-icon {
-  margin-top: 5px;
+.feature-weather__hour-icon {
   font-family: "HomeDashboardEmoji", sans-serif;
-  font-size: clamp(1.7rem, 3.8vw, 3rem);
-  line-height: 1.1;
+  font-size: clamp(1.7rem, 3.3vw, 2.5rem);
+  line-height: 1;
 }
 
-.feature-weather__fetched {
-  color: #888;
-  font-size: clamp(0.62rem, 1.15vw, 0.8rem);
+.feature-weather__hour-stats {
+  min-width: 0;
+  text-align: right;
+  font-size: clamp(0.68rem, 1.2vw, 0.85rem);
+  line-height: 1.25;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.feature-weather__hour-probability {
+  color: #999;
+  margin-top: 2px;
 }
 
 .feature-weather__attribution {

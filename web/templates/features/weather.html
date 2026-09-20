@@ -8,7 +8,7 @@
   data-bg-rain="{{ tile.context.settings.background.rain }}"
   tabindex="0"
   role="button"
-  aria-label="６時間天気予報。タップで1週間予報を表示"
+  aria-label="６時間天気予報。タップで時間ごとの天気を表示"
 >
   <div class="feature-weather__view feature-weather__view--overview" data-weather-view="overview">
     <div class="feature-weather__period" data-role="period">{{ tile.context.settings.region }}の 雨予想</div>
@@ -27,9 +27,8 @@
   </div>
 
   <div class="feature-weather__view feature-weather__view--detail" data-weather-view="detail" hidden>
-    <div class="feature-weather__detail-title">今後1週間</div>
-    <div class="feature-weather__days" data-role="days"></div>
-    <div class="feature-weather__fetched" data-role="fetched">最終取得: --</div>
+    <div class="feature-weather__detail-title">今後6時間</div>
+    <div class="feature-weather__hours" data-role="hours"></div>
     <div class="feature-weather__attribution">気象データ: Open-Meteo.com（CC BY 4.0）</div>
   </div>
 </div>
