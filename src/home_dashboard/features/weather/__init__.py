@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import date, datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone
 import json
 from pathlib import Path
 import threading
@@ -18,8 +18,6 @@ CONFIG_PATH = Path(__file__).resolve().parents[4] / "config" / "weather.toml"
 API_URL = "https://api.open-meteo.com/v1/forecast"
 TIMEZONE_NAME = "Asia/Tokyo"
 JST = timezone(timedelta(hours=9))
-
-WEEKDAY_NAMES_JA = ("月", "火", "水", "木", "金", "土", "日")
 
 # WMO weather interpretation codes used by Open-Meteo.
 WEATHER_ICONS = {
@@ -167,8 +165,8 @@ def _fetch_forecast(
             "latitude": settings["latitude"],
             "longitude": settings["longitude"],
             "hourly": "precipitation,precipitation_probability,weather_code",
-            "daily": "weather_code",
-            "forecast_days": 7,
+            # Current hour + the following six hours.
+            "forecast_hours": 7,
             "timezone": TIMEZONE_NAME,
         }
     )
@@ -185,16 +183,13 @@ def _build_display_data(
     payload: dict[str, Any], settings: dict[str, Any], fetched_at: datetime
 ) -> dict[str, Any]:
     hourly = payload.get("hourly")
-    daily = payload.get("daily")
-    if not isinstance(hourly, dict) or not isinstance(daily, dict):
-        raise ValueError("Open-Meteo response is missing hourly or daily data")
+    if not isinstance(hourly, dict):
+        raise ValueError("Open-Meteo response is missing hourly data")
 
     hourly_times = hourly.get("time")
     precipitation = hourly.get("precipitation")
     precipitation_probability = hourly.get("precipitation_probability")
     hourly_weather_codes = hourly.get("weather_code")
-    daily_times = daily.get("time")
-    daily_weather_codes = daily.get("weather_code")
 
     if not isinstance(hourly_times, list) or not isinstance(precipitation, list):
         raise ValueError("Open-Meteo hourly data is invalid")
@@ -210,10 +205,6 @@ def _build_display_data(
         or len(hourly_weather_codes) != len(hourly_times)
     ):
         raise ValueError("Open-Meteo hourly weather code array is invalid")
-    if not isinstance(daily_times, list) or not isinstance(daily_weather_codes, list):
-        raise ValueError("Open-Meteo daily data is invalid")
-    if len(daily_times) != len(daily_weather_codes):
-        raise ValueError("Open-Meteo daily arrays have different lengths")
 
     now = fetched_at
     start = now.replace(minute=0, second=0, microsecond=0)
@@ -227,7 +218,8 @@ def _build_display_data(
     )
     max_precipitation = max(item["precipitation"] for item in values)
     max_probability = _max_or_none(item["probability"] for item in values)
-    icon = _rain_icon(values, settings)
+    icon = _weather_icon(values)
+    background_state = _background_state(values, settings)
 
     return {
         "region": settings["region"],
@@ -238,10 +230,19 @@ def _build_display_data(
         },
         "current": {
             "icon": icon,
+            "background_state": background_state,
             "max_precipitation_mm_per_hour": max_precipitation,
             "max_precipitation_probability": max_probability,
         },
-        "daily": _build_daily_forecast(daily_times, daily_weather_codes, fetched_at.date()),
+        "hours": [
+            {
+                "label": _hour_label(start + timedelta(hours=index)),
+                "icon": WEATHER_ICONS.get(item["weather_code"], "❓️"),
+                "precipitation_mm_per_hour": item["precipitation"],
+                "precipitation_probability": item["probability"],
+            }
+            for index, item in enumerate(values)
+        ],
     }
 
 
@@ -255,9 +256,11 @@ def _extract_six_hour_values(
     time_to_index = {str(value): index for index, value in enumerate(hourly_times)}
     values: list[dict[str, float | int | None]] = []
 
-    # Open-Meteo's precipitation value at HH:00 represents the preceding hour.
-    # Therefore, the interval start..start+1h is represented by the value at start+1h.
+    # Open-Meteo's precipitation/probability value at HH:00 represents the preceding hour.
+    # Therefore, the interval start..start+1h uses precipitation/probability at start+1h,
+    # while weather_code at the interval start represents the weather condition for that hour.
     for offset in range(1, 7):
+        interval_start = start + timedelta(hours=offset - 1)
         interval_end = start + timedelta(hours=offset)
         key = interval_end.strftime("%Y-%m-%dT%H:%M")
         index = time_to_index.get(key)
@@ -270,7 +273,11 @@ def _extract_six_hour_values(
         if precipitation_probability is not None:
             raw_probability = precipitation_probability[index]
             probability = float(raw_probability) if raw_probability is not None else None
-        raw_weather_code = weather_codes[index]
+        start_key = interval_start.strftime("%Y-%m-%dT%H:%M")
+        start_index = time_to_index.get(start_key)
+        if start_index is None:
+            raise ValueError(f"Open-Meteo forecast is missing {start_key}")
+        raw_weather_code = weather_codes[start_index]
         weather_code = int(raw_weather_code) if raw_weather_code is not None else 0
         values.append(
             {
@@ -288,51 +295,45 @@ def _max_or_none(values: Any) -> float | None:
     return max(numeric) if numeric else None
 
 
-def _rain_icon(
+WEATHER_ICON_PRIORITY = [
+    ("⛈️", {95, 96, 99}),
+    ("🌨️", {71, 73, 75, 77, 85, 86}),
+    ("🌧️", {56, 57, 61, 63, 65, 66, 67, 82}),
+    ("🌦️", {51, 53, 55, 80, 81}),
+    ("🌫️", {45, 48}),
+    ("☁️", {3}),
+    ("⛅️", {2}),
+    ("🌤️", {1}),
+    ("☀️", {0}),
+]
+
+
+def _weather_icon(values: list[dict[str, float | int | None]]) -> str:
+    """Return one overview icon based only on WMO weather codes."""
+    codes = {int(item["weather_code"]) for item in values}
+    for icon, weather_codes in WEATHER_ICON_PRIORITY:
+        if codes & weather_codes:
+            return icon
+    return "❓️"
+
+
+def _background_state(
     values: list[dict[str, float | int | None]], settings: dict[str, Any]
 ) -> str:
+    """Return the overview background state based only on precipitation."""
     max_precipitation = max(item["precipitation"] for item in values)
-    if any(item["weather_code"] in {71, 73, 75, 77, 85, 86} for item in values):
-        return "❄️"
     if max_precipitation <= settings["no_rain_max_mm_per_hour"]:
-        if any(item["weather_code"] == 3 for item in values):
-            return "☁️"
-        return "☀️"
+        return "sunny"
     if max_precipitation <= settings["light_rain_max_mm_per_hour"]:
-        return "🌂️"
-    return "☂️"
+        return "light_rain"
+    return "rain"
 
 
 def _period_label(start: datetime, end: datetime) -> str:
     if start.date() == end.date():
-        return f"{start.hour}～{end.hour}時"
-    return f"{start.hour}～翌{end.hour}時"
+        return f"{start.hour}時～{end.hour}時"
+    return f"{start.hour}時～翌{end.hour}時"
 
 
-def _build_daily_forecast(
-    dates: list[Any], weather_codes: list[Any], today: date
-) -> list[dict[str, Any]]:
-    items: list[dict[str, Any]] = []
-    for raw_date, raw_code in zip(dates, weather_codes):
-        try:
-            day = datetime.strptime(str(raw_date), "%Y-%m-%d").date()
-        except ValueError as exc:
-            raise ValueError(f"Invalid daily forecast date: {raw_date}") from exc
-        if day < today:
-            continue
-        code = int(raw_code)
-        items.append(
-            {
-                "date": day.isoformat(),
-                "month": day.month,
-                "day": day.day,
-                "weekday": WEEKDAY_NAMES_JA[day.weekday()],
-                "icon": WEATHER_ICONS.get(code, "❓️"),
-            }
-        )
-        if len(items) == 7:
-            break
-
-    if len(items) < 7:
-        raise ValueError("Open-Meteo daily forecast contains fewer than 7 days")
-    return items
+def _hour_label(value: datetime) -> str:
+    return f"{value.hour}時台"
