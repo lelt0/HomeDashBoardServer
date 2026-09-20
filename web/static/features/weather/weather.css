@@ -94,39 +94,37 @@
 .feature-weather__hours {
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: clamp(3px, 0.7vw, 8px);
+  gap: clamp(6px, 1vw, 12px);
   width: 100%;
 }
 
 .feature-weather__hour {
   min-width: 0;
   min-height: 0;
-  padding: clamp(4px, 0.7vw, 7px) 2px;
-  border: 1px solid #2f2f2f;
-  border-radius: 8px;
+  padding: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: clamp(3px, 0.5vw, 6px);
+  gap: clamp(5px, 0.7vw, 8px);
 }
 
 .feature-weather__hour-label {
   color: #c0c0c0;
-  font-size: clamp(0.62rem, 1.1vw, 0.82rem);
+  font-size: clamp(0.68rem, 1.2vw, 0.9rem);
   white-space: nowrap;
 }
 
 .feature-weather__hour-icon {
   font-family: "HomeDashboardEmoji", sans-serif;
-  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  font-size: clamp(1.8rem, 3.4vw, 2.6rem);
   line-height: 1;
 }
 
 .feature-weather__hour-stats {
   min-width: 0;
   text-align: center;
-  font-size: clamp(0.6rem, 1.05vw, 0.78rem);
+  font-size: clamp(0.62rem, 1.1vw, 0.82rem);
   line-height: 1.25;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
