@@ -14,12 +14,12 @@
     <div class="feature-weather__umbrella" data-role="umbrella">--</div>
     <div class="feature-weather__stats">
       <div class="feature-weather__stat">
-        <span class="feature-weather__stat-label">最大降水確率</span>
-        <span class="feature-weather__stat-value" data-role="max-probability">--</span>
-      </div>
-      <div class="feature-weather__stat">
         <span class="feature-weather__stat-label">最大降水量</span>
         <span class="feature-weather__stat-value" data-role="max-precipitation">--</span>
+      </div>
+      <div class="feature-weather__stat">
+        <span class="feature-weather__stat-label">最大降水確率</span>
+        <span class="feature-weather__stat-value" data-role="max-probability">--</span>
       </div>
     </div>
     <div class="feature-weather__error" data-role="error" hidden></div>
@@ -29,16 +29,20 @@
     <div class="feature-weather__detail-title" data-role="detail-title"></div>
     <div class="feature-weather__chart-wrap">
       <div class="feature-weather__chart-axis" aria-hidden="true">
-        <span class="feature-weather__chart-scale feature-weather__chart-scale--top">10</span>
-        <span class="feature-weather__chart-scale feature-weather__chart-scale--middle">5</span>
-        <span class="feature-weather__chart-scale feature-weather__chart-scale--bottom">0</span>
+        <div class="feature-weather__chart-axis-graph">
+          <span class="feature-weather__chart-scale feature-weather__chart-scale--top">10</span>
+          <span class="feature-weather__chart-scale feature-weather__chart-scale--middle">5</span>
+          <span class="feature-weather__chart-scale feature-weather__chart-scale--bottom">0</span>
+        </div>
       </div>
       <div class="feature-weather__chart-plot">
-        <div class="feature-weather__chart-line feature-weather__chart-line--top"></div>
-        <div class="feature-weather__chart-line feature-weather__chart-line--middle"></div>
-        <div class="feature-weather__chart-line feature-weather__chart-line--bottom"></div>
-        <div class="feature-weather__chart-threshold" data-role="graph-threshold">
-          <span class="feature-weather__chart-threshold-label" data-role="graph-threshold-label"></span>
+        <div class="feature-weather__chart-graph-overlay">
+          <div class="feature-weather__chart-line feature-weather__chart-line--top"></div>
+          <div class="feature-weather__chart-line feature-weather__chart-line--middle"></div>
+          <div class="feature-weather__chart-line feature-weather__chart-line--bottom"></div>
+          <div class="feature-weather__chart-threshold" data-role="graph-threshold">
+            <span class="feature-weather__chart-threshold-label" data-role="graph-threshold-label"></span>
+          </div>
         </div>
         <div class="feature-weather__hours" data-role="hours"></div>
       </div>

@@ -55,7 +55,12 @@
     }
 
     var clamped = Math.max(0, Math.min(GRAPH_MAX_MM_PER_HOUR, threshold));
-    thresholdElement.style.bottom = (clamped / GRAPH_MAX_MM_PER_HOUR * 100) + '%';
+    thresholdElement.style.setProperty(
+      '--weather-threshold-position',
+      (100 - clamped / GRAPH_MAX_MM_PER_HOUR * 100) + '%'
+    );
+    thresholdElement.style.removeProperty('top');
+    thresholdElement.style.removeProperty('bottom');
     labelElement.textContent = threshold.toFixed(1);
     thresholdElement.hidden = false;
   }
@@ -90,7 +95,8 @@
       value.textContent = item.precipitation_mm_per_hour === null ||
         typeof item.precipitation_mm_per_hour === 'undefined'
         ? '--'
-        : Number(item.precipitation_mm_per_hour).toFixed(1);
+        : Number(item.precipitation_mm_per_hour).toFixed(1) +
+          'mm/' + formatProbability(item.precipitation_probability);
 
       plot.appendChild(bar);
 
