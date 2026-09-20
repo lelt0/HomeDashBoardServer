@@ -1,3 +1,11 @@
+@font-face {
+  font-family: "HomeDashboardEmoji";
+  src: url("/static/fonts/HomeDashboardEmoji.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
 .feature-trash {
   position: relative;
   overflow: hidden;
@@ -49,6 +57,7 @@
 
 .feature-trash__icon {
   flex: 0 0 auto;
+  font-family: "HomeDashboardEmoji", sans-serif;
 }
 
 .feature-trash__no-collection {

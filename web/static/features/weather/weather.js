@@ -29,18 +29,18 @@
   function setRainClass(root, icon) {
     root.className = root.className
       .replace(/\sfeature-weather--(?:sunny|cloudy|light-rain|rain)\b/g, '');
-    if (icon === '☀') root.classList.add('feature-weather--sunny');
-    else if (icon === '☁') root.classList.add('feature-weather--cloudy');
-    else if (icon === '🌂') root.classList.add('feature-weather--light-rain');
-    else if (icon === '☂') root.classList.add('feature-weather--rain');
+    if (icon === '☀️') root.classList.add('feature-weather--sunny');
+    else if (icon === '☁️') root.classList.add('feature-weather--cloudy');
+    else if (icon === '🌂️') root.classList.add('feature-weather--light-rain');
+    else if (icon === '☂️') root.classList.add('feature-weather--rain');
   }
 
   function setBackgroundColor(root, icon) {
     var colors = {
-      '☀': root.getAttribute('data-bg-sunny'),
-      '☁': root.getAttribute('data-bg-cloudy'),
-      '🌂': root.getAttribute('data-bg-light-rain'),
-      '☂': root.getAttribute('data-bg-rain')
+      '☀️': root.getAttribute('data-bg-sunny'),
+      '☁️': root.getAttribute('data-bg-cloudy'),
+      '🌂️': root.getAttribute('data-bg-light-rain'),
+      '☂️': root.getAttribute('data-bg-rain')
     };
     var color = colors[icon];
     if (color) root.style.backgroundColor = color;
