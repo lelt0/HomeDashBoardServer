@@ -98,6 +98,22 @@ def _load_config() -> dict[str, Any]:
         return tomllib.load(file)
 
 
+def _normalize_emoji_icon(icon: str) -> str:
+    """Prefer emoji presentation for standalone supplementary-plane emoji icons.
+
+    Some legacy Android/Chromium combinations can fall back to a system
+    monochrome emoji font unless emoji presentation is explicitly requested.
+    Normalize only single-codepoint emoji icons so the configuration remains
+    portable across browser/OS versions.
+    """
+    if len(icon) != 1:
+        return icon
+    codepoint = ord(icon)
+    if 0x1F000 <= codepoint <= 0x1FAFF:
+        return f"{icon}\ufe0f"
+    return icon
+
+
 def _load_trash_types(config: dict[str, Any]) -> list[dict[str, Any]]:
     raw_types = config.get("trash", {}).get("types", [])
     if not isinstance(raw_types, list):
@@ -109,7 +125,7 @@ def _load_trash_types(config: dict[str, Any]) -> list[dict[str, Any]]:
             raise ValueError("Each trash type must be a table")
 
         name = str(raw_type.get("name", "")).strip()
-        icon = str(raw_type.get("icon", "")).strip()
+        icon = _normalize_emoji_icon(str(raw_type.get("icon", "")).strip())
         schedule = raw_type.get("schedule", [])
         if not name:
             raise ValueError("Trash type name must not be empty")
