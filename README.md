@@ -40,3 +40,12 @@ config/
 ```
 
 `config/dashboard.toml` の `[[tiles]]` を変更することで、機能の配置・表示幅を機能実装から分離して変更できる。
+
+## 絵文字フォント
+
+デプロイ前に以下を実行すると、`src/`・`web/`・`config/` の絵文字を正規化し、使用中の絵文字だけで `HomeDashboardEmoji.ttf` を再生成する。
+初回はNoto Color Emojiを自動取得する。
+
+```bash
+uv run tools/standardize_emoji.py
+```
