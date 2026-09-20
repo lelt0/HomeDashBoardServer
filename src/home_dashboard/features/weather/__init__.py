@@ -25,7 +25,7 @@ WEEKDAY_NAMES_JA = ("月", "火", "水", "木", "金", "土", "日")
 WEATHER_ICONS = {
     0: "☀️",
     1: "🌤️",
-    2: "⛅",
+    2: "⛅️",
     3: "☁️",
     45: "🌫️",
     48: "🌫️",
@@ -299,7 +299,7 @@ def _rain_icon(
             return "☁️"
         return "☀️"
     if max_precipitation <= settings["light_rain_max_mm_per_hour"]:
-        return "🌂"
+        return "🌂️"
     return "☂️"
 
 
@@ -327,7 +327,7 @@ def _build_daily_forecast(
                 "month": day.month,
                 "day": day.day,
                 "weekday": WEEKDAY_NAMES_JA[day.weekday()],
-                "icon": WEATHER_ICONS.get(code, "❓"),
+                "icon": WEATHER_ICONS.get(code, "❓️"),
             }
         )
         if len(items) == 7:
