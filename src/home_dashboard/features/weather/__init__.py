@@ -331,8 +331,8 @@ def _background_state(
 
 def _period_label(start: datetime, end: datetime) -> str:
     if start.date() == end.date():
-        return f"{start.hour}～{end.hour}時"
-    return f"{start.hour}～翌{end.hour}時"
+        return f"{start.hour}時～{end.hour}時"
+    return f"{start.hour}時～翌{end.hour}時"
 
 
 def _hour_label(value: datetime) -> str:

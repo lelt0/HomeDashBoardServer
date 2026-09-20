@@ -96,7 +96,7 @@
         typeof item.precipitation_mm_per_hour === 'undefined'
         ? '--'
         : Number(item.precipitation_mm_per_hour).toFixed(1) +
-          'mm/' + formatProbability(item.precipitation_probability);
+          'mm / ' + formatProbability(item.precipitation_probability);
 
       plot.appendChild(bar);
 
@@ -143,7 +143,7 @@
       var current = data.current;
       var periodData = data.period;
 
-      period.textContent = data.region + 'の ' + periodData.label + ' の天気予報';
+      period.textContent = data.region + '　' + periodData.label;
       umbrella.textContent = current.icon;
       maxProbability.textContent = formatProbability(current.max_precipitation_probability);
       maxPrecipitation.textContent = formatPrecipitation(current.max_precipitation_mm_per_hour);
