@@ -295,7 +295,9 @@ def test_weather_template_contains_hourly_detail_without_daily_forecast() -> Non
     assert "daily" not in html
     assert "feature-weather__days" not in css
     assert "feature-weather__day" not in css
-    assert "repeat(6, minmax(0, 1fr))" in css
+    assert ".feature-weather__chart-wrap" in css
+    assert "display: flex;" in css
+    assert ".feature-weather__hours" in css
     assert "renderDays" not in js
     assert "data-role=\"days\"" not in js
     assert "daily" not in js
