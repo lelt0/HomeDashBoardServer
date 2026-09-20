@@ -92,9 +92,26 @@
 }
 
 .feature-weather__chart-wrap {
+  --weather-hour-label-size: clamp(0.62rem, 1.1vw, 0.82rem);
+  --weather-hour-icon-size: clamp(1.45rem, 2.9vw, 2.2rem);
+  --weather-hour-gap: clamp(2px, 0.35vw, 4px);
+  --weather-hour-value-size: clamp(0.62rem, 1.1vw, 0.82rem);
+  --weather-hour-label-row: calc(var(--weather-hour-label-size) * 1.9);
+  --weather-hour-icon-row: calc(var(--weather-hour-icon-size) * 1.2);
+  --weather-hour-value-row: calc(var(--weather-hour-value-size) * 1.2);
+  --weather-graph-top: calc(
+    var(--weather-hour-label-row) +
+    var(--weather-hour-gap) +
+    var(--weather-hour-icon-row) +
+    var(--weather-hour-gap)
+  );
+  --weather-graph-bottom: calc(
+    var(--weather-hour-gap) +
+    var(--weather-hour-value-row)
+  );
   display: flex;
   width: 100%;
-  height: clamp(110px, 21vw, 155px);
+  height: clamp(110px, 21vw, 250px);
 }
 
 .feature-weather__chart-axis {
@@ -105,6 +122,14 @@
   font-size: clamp(0.55rem, 1vw, 0.7rem);
   line-height: 1;
   font-variant-numeric: tabular-nums;
+}
+
+.feature-weather__chart-axis-graph {
+  position: absolute;
+  top: var(--weather-graph-top);
+  right: 0;
+  bottom: var(--weather-graph-bottom);
+  left: 0;
 }
 
 .feature-weather__chart-scale {
@@ -123,8 +148,8 @@
 }
 
 .feature-weather__chart-scale--bottom {
-  bottom: 0;
-  transform: translateY(0);
+  top: 100%;
+  transform: translateY(-100%);
 }
 
 .feature-weather__chart-plot {
@@ -134,12 +159,21 @@
   height: 100%;
 }
 
+.feature-weather__chart-graph-overlay {
+  position: absolute;
+  top: var(--weather-graph-top);
+  right: 0;
+  bottom: var(--weather-graph-bottom);
+  left: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
 .feature-weather__chart-line {
   position: absolute;
   left: 0;
   right: 0;
   border-top: 1px solid #292929;
-  pointer-events: none;
 }
 
 .feature-weather__chart-line--top {
@@ -157,18 +191,23 @@
 
 .feature-weather__chart-threshold {
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 20%;
-  border-top: 1px dashed #64808c;
+  inset: 0;
   z-index: 2;
-  pointer-events: none;
+}
+
+.feature-weather__chart-threshold::before {
+  content: "";
+  position: absolute;
+  right: 0;
+  left: 0;
+  top: var(--weather-threshold-position, 80%);
+  border-top: 1px dashed #64808c;
 }
 
 .feature-weather__chart-threshold-label {
   position: absolute;
   left: 2px;
-  top: 0;
+  top: var(--weather-threshold-position, 80%);
   transform: translateY(-100%);
   padding: 0 2px;
   color: #7898a4;
@@ -184,40 +223,49 @@
   right: 0;
   bottom: 0;
   left: 0;
-  display: flex;
-  gap: clamp(4px, 0.9vw, 10px);
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-rows:
+    var(--weather-hour-label-row)
+    var(--weather-hour-icon-row)
+    minmax(0, 1fr)
+    var(--weather-hour-value-row);
+  column-gap: clamp(4px, 0.9vw, 10px);
+  row-gap: var(--weather-hour-gap);
   width: 100%;
+  z-index: 1;
 }
 
 .feature-weather__hour {
-  flex: 1 1 0;
-  min-width: 0;
-  min-height: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  gap: clamp(2px, 0.35vw, 4px);
+  display: contents;
 }
 
 .feature-weather__hour-label {
   color: #c0c0c0;
-  font-size: clamp(0.62rem, 1.1vw, 0.82rem);
+  font-size: var(--weather-hour-label-size);
   line-height: 1.1;
   white-space: nowrap;
+  grid-row: 1;
+  justify-self: center;
+  align-self: start;
 }
 
 .feature-weather__hour-icon {
   font-family: "HomeDashboardEmoji", sans-serif;
-  font-size: clamp(1.45rem, 2.9vw, 2.2rem);
+  font-size: var(--weather-hour-icon-size);
   line-height: 1;
+  grid-row: 2;
+  justify-self: center;
+  align-self: start;
 }
 
 .feature-weather__hour-plot {
   position: relative;
-  flex: 1;
-  align-self: stretch;
   min-height: 0;
+  min-width: 0;
+  width: 100%;
+  grid-row: 3;
+  align-self: stretch;
 }
 
 .feature-weather__hour-bar {
@@ -232,10 +280,13 @@
 
 .feature-weather__hour-value {
   color: #a8a8a8;
-  font-size: clamp(0.55rem, 0.95vw, 0.68rem);
+  font-size: var(--weather-hour-value-size);
   line-height: 1;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
+  grid-row: 4;
+  justify-self: center;
+  align-self: start;
 }
 
 .feature-weather__chart-legend {
