@@ -6,7 +6,7 @@ display_switch_time = "08:00"
 [[trash.types]]
 id = "burnable"
 name = "燃やすごみ"
-icon = "🔥"
+icon = "🔥️"
 schedule = [
   { type = "weekly", weekdays = ["mon", "thu"] },
 ]
@@ -14,7 +14,7 @@ schedule = [
 [[trash.types]]
 id = "bin"
 name = "ビン（コンテナ）"
-icon = "🫙"
+icon = "🫙️"
 schedule = [
   { type = "nth_weekday", weekday = "wed", nth = [1, 3] },
 ]
@@ -22,7 +22,7 @@ schedule = [
 [[trash.types]]
 id = "non-burnable"
 name = "不燃ごみ"
-icon = "💡"
+icon = "💡️"
 schedule = [
   { type = "weekly", weekdays = ["fri"] },
 ]
@@ -30,7 +30,7 @@ schedule = [
 [[trash.types]]
 id = "paper"
 name = "紙など資源"
-icon = "📦"
+icon = "📦️"
 schedule = [
   { type = "nth_weekday", weekday = "fri", nth = [2, 4] },
 ]
@@ -46,7 +46,7 @@ schedule = [
 [[trash.types]]
 id = "bottle_can"
 name = "ペットボトル・缶"
-icon = "🥤"
+icon = "🥤️"
 schedule = [
   { type = "weekly", weekdays = ["tue"] },
 ]
