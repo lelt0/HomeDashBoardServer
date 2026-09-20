@@ -53,7 +53,7 @@ FEATURES: dict[str, FeatureDefinition] = {
         router=weather_router,
     ),
     "trash": FeatureDefinition(
-        title="ゴミ回収日",
+        title="ゴミ回収",
         template="features/trash.html",
         styles=("/static/features/trash/trash.css",),
         scripts=("/static/features/trash/trash.js",),
