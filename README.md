@@ -16,10 +16,10 @@
 
 ```bash
 uv sync
-uv run uvicorn home_dashboard.main:app --host 0.0.0.0 --port 8000
+uv run uvicorn home_dashboard.main:app --host 0.0.0.0 --port 8080
 ```
 
-ローカルでは `http://127.0.0.1:8000/`、LAN内の別端末では `http://<サーバーIP>:8000/` を開く。
+ローカルでは `http://127.0.0.1:8080/`、LAN内の別端末では `http://<サーバーIP>:8080/` を開く。
 
 ## ディレクトリ構成
 
