@@ -1,5 +1,6 @@
 (function () {
   var roots = document.querySelectorAll('[data-feature-root="weather"]');
+  var GRAPH_MAX_MM_PER_HOUR = 10.0;
 
   function formatDateTime(isoString) {
     var date = new Date(isoString);
@@ -33,6 +34,32 @@
     else root.style.removeProperty('background-color');
   }
 
+  function precipitationBarHeight(value) {
+    var amount = Number(value);
+    if (!isFinite(amount) || amount <= 0) return 0;
+    return Math.min(amount, GRAPH_MAX_MM_PER_HOUR) / GRAPH_MAX_MM_PER_HOUR * 100;
+  }
+
+  function precipitationBarOpacity(value) {
+    var probability = Number(value);
+    if (!isFinite(probability)) return 0.5;
+    probability = Math.max(0, Math.min(100, probability));
+    return 0.18 + 0.82 * probability / 100;
+  }
+
+  function setGraphThreshold(thresholdElement, labelElement, thresholdValue) {
+    var threshold = Number(thresholdValue);
+    if (!isFinite(threshold)) {
+      thresholdElement.hidden = true;
+      return;
+    }
+
+    var clamped = Math.max(0, Math.min(GRAPH_MAX_MM_PER_HOUR, threshold));
+    thresholdElement.style.bottom = (clamped / GRAPH_MAX_MM_PER_HOUR * 100) + '%';
+    labelElement.textContent = threshold.toFixed(1);
+    thresholdElement.hidden = false;
+  }
+
   function renderHours(hoursElement, hours) {
     hoursElement.innerHTML = '';
     for (var i = 0; i < hours.length; i += 1) {
@@ -49,23 +76,28 @@
       icon.textContent = item.icon;
       icon.setAttribute('aria-hidden', 'true');
 
-      var stats = document.createElement('div');
-      stats.className = 'feature-weather__hour-stats';
+      var plot = document.createElement('div');
+      plot.className = 'feature-weather__hour-plot';
 
-      var precipitation = document.createElement('div');
-      precipitation.className = 'feature-weather__hour-precipitation';
-      precipitation.textContent = formatPrecipitation(item.precipitation_mm_per_hour);
+      var bar = document.createElement('div');
+      bar.className = 'feature-weather__hour-bar';
+      bar.style.height = precipitationBarHeight(item.precipitation_mm_per_hour) + '%';
+      bar.style.opacity = precipitationBarOpacity(item.precipitation_probability);
+      bar.setAttribute('aria-hidden', 'true');
 
-      var probability = document.createElement('div');
-      probability.className = 'feature-weather__hour-probability';
-      probability.textContent = formatProbability(item.precipitation_probability);
+      var value = document.createElement('div');
+      value.className = 'feature-weather__hour-value';
+      value.textContent = item.precipitation_mm_per_hour === null ||
+        typeof item.precipitation_mm_per_hour === 'undefined'
+        ? '--'
+        : Number(item.precipitation_mm_per_hour).toFixed(1);
 
-      stats.appendChild(precipitation);
-      stats.appendChild(probability);
+      plot.appendChild(bar);
 
       hour.appendChild(label);
       hour.appendChild(icon);
-      hour.appendChild(stats);
+      hour.appendChild(plot);
+      hour.appendChild(value);
       hoursElement.appendChild(hour);
     }
   }
@@ -80,6 +112,8 @@
     var error = root.querySelector('[data-role="error"]');
     var detailTitle = root.querySelector('[data-role="detail-title"]');
     var hours = root.querySelector('[data-role="hours"]');
+    var graphThreshold = root.querySelector('[data-role="graph-threshold"]');
+    var graphThresholdLabel = root.querySelector('[data-role="graph-threshold-label"]');
 
     var detailTimer = null;
     var retryTimer = null;
@@ -113,6 +147,11 @@
       maxProbability.textContent = formatProbability(current.max_precipitation_probability);
       maxPrecipitation.textContent = formatPrecipitation(current.max_precipitation_mm_per_hour);
       setBackgroundColor(root, current.background_state);
+      setGraphThreshold(
+        graphThreshold,
+        graphThresholdLabel,
+        root.getAttribute('data-light-rain-threshold')
+      );
       renderHours(hours, data.hours);
       lastFetchedAt = new Date(fetchedAt);
       hasData = true;

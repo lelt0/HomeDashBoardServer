@@ -4,6 +4,7 @@
   data-bg-sunny="{{ tile.context.settings.background.sunny }}"
   data-bg-light-rain="{{ tile.context.settings.background.light_rain }}"
   data-bg-rain="{{ tile.context.settings.background.rain }}"
+  data-light-rain-threshold="{{ tile.context.settings.light_rain_max_mm_per_hour }}"
   tabindex="0"
   role="button"
   aria-label="６時間天気予報。タップで時間ごとの天気を表示"
@@ -26,7 +27,23 @@
 
   <div class="feature-weather__view feature-weather__view--detail" data-weather-view="detail" hidden>
     <div class="feature-weather__detail-title" data-role="detail-title"></div>
-    <div class="feature-weather__hours" data-role="hours"></div>
+    <div class="feature-weather__chart-wrap">
+      <div class="feature-weather__chart-axis" aria-hidden="true">
+        <span class="feature-weather__chart-scale feature-weather__chart-scale--top">10</span>
+        <span class="feature-weather__chart-scale feature-weather__chart-scale--middle">5</span>
+        <span class="feature-weather__chart-scale feature-weather__chart-scale--bottom">0</span>
+      </div>
+      <div class="feature-weather__chart-plot">
+        <div class="feature-weather__chart-line feature-weather__chart-line--top"></div>
+        <div class="feature-weather__chart-line feature-weather__chart-line--middle"></div>
+        <div class="feature-weather__chart-line feature-weather__chart-line--bottom"></div>
+        <div class="feature-weather__chart-threshold" data-role="graph-threshold">
+          <span class="feature-weather__chart-threshold-label" data-role="graph-threshold-label"></span>
+        </div>
+        <div class="feature-weather__hours" data-role="hours"></div>
+      </div>
+    </div>
+    <div class="feature-weather__chart-legend">高さ：降水量　濃さ：降水確率</div>
     <div class="feature-weather__attribution">気象データ: Open-Meteo.com（CC BY 4.0）</div>
   </div>
 </div>
