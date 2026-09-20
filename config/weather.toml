@@ -15,5 +15,5 @@ light_rain_max_mm_per_hour = 2.0
 # 6時間の最大降水量に応じたグリッド背景色。
 [weather.background]
 sunny = "#151515"
-light_rain = "#10191b"
-rain = "#0f1820"
+light_rain = "#003844"
+rain = "#003f7a"

@@ -102,7 +102,7 @@
       var current = data.current;
       var periodData = data.period;
 
-      period.textContent = data.region + 'の ' + periodData.label + ' の雨予想';
+      period.textContent = data.region + 'の ' + periodData.label + ' の天気予報';
       umbrella.textContent = current.icon;
       maxProbability.textContent = formatProbability(current.max_precipitation_probability);
       maxPrecipitation.textContent = formatPrecipitation(current.max_precipitation_mm_per_hour);
