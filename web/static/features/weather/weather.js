@@ -78,6 +78,7 @@
     var maxProbability = root.querySelector('[data-role="max-probability"]');
     var maxPrecipitation = root.querySelector('[data-role="max-precipitation"]');
     var error = root.querySelector('[data-role="error"]');
+    var detailTitle = root.querySelector('[data-role="detail-title"]');
     var hours = root.querySelector('[data-role="hours"]');
 
     var detailTimer = null;
@@ -97,6 +98,11 @@
         error.hidden = true;
       }
     }
+
+    var now = new Date();
+    detailTitle.textContent =
+      ('0' + now.getHours()).slice(-2) + ':' +
+      ('0' + now.getMinutes()).slice(-2) + 'から1時間ごと';
 
     function renderData(data, fetchedAt) {
       var current = data.current;
