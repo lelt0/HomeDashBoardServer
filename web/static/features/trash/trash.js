@@ -52,7 +52,7 @@
 
     function formatDate(date, tomorrow) {
       var prefix = tomorrow ? '明日 ' : '';
-      return prefix + (date.getMonth() + 1) + '月' + date.getDate() + '日 ' + weekdayLabel(date);
+      return prefix + weekdayLabel(date);
     }
 
     function weeklyMatches(date, weekdays) {
