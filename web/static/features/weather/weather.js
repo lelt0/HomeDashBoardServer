@@ -22,23 +22,13 @@
     return Math.round(Number(value)) + '%';
   }
 
-  function setRainClass(root, icon) {
-    root.className = root.className
-      .replace(/\sfeature-weather--(?:sunny|cloudy|light-rain|rain)\b/g, '');
-    if (icon === '☀️') root.classList.add('feature-weather--sunny');
-    else if (icon === '☁️') root.classList.add('feature-weather--cloudy');
-    else if (icon === '🌂️') root.classList.add('feature-weather--light-rain');
-    else if (icon === '☂️') root.classList.add('feature-weather--rain');
-  }
-
-  function setBackgroundColor(root, icon) {
+  function setBackgroundColor(root, backgroundState) {
     var colors = {
-      '☀️': root.getAttribute('data-bg-sunny'),
-      '☁️': root.getAttribute('data-bg-cloudy'),
-      '🌂️': root.getAttribute('data-bg-light-rain'),
-      '☂️': root.getAttribute('data-bg-rain')
+      sunny: root.getAttribute('data-bg-sunny'),
+      light_rain: root.getAttribute('data-bg-light-rain'),
+      rain: root.getAttribute('data-bg-rain')
     };
-    var color = colors[icon];
+    var color = colors[backgroundState];
     if (color) root.style.backgroundColor = color;
     else root.style.removeProperty('background-color');
   }
@@ -116,8 +106,7 @@
       umbrella.textContent = current.icon;
       maxProbability.textContent = formatProbability(current.max_precipitation_probability);
       maxPrecipitation.textContent = formatPrecipitation(current.max_precipitation_mm_per_hour);
-      setRainClass(root, current.icon);
-      setBackgroundColor(root, current.icon);
+      setBackgroundColor(root, current.background_state);
       renderHours(hours, data.hours);
       lastFetchedAt = new Date(fetchedAt);
       hasData = true;

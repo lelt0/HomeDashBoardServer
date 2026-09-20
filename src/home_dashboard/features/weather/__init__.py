@@ -218,7 +218,8 @@ def _build_display_data(
     )
     max_precipitation = max(item["precipitation"] for item in values)
     max_probability = _max_or_none(item["probability"] for item in values)
-    icon = _rain_icon(values, settings)
+    icon = _weather_icon(values)
+    background_state = _background_state(values, settings)
 
     return {
         "region": settings["region"],
@@ -229,6 +230,7 @@ def _build_display_data(
         },
         "current": {
             "icon": icon,
+            "background_state": background_state,
             "max_precipitation_mm_per_hour": max_precipitation,
             "max_precipitation_probability": max_probability,
         },
@@ -293,19 +295,38 @@ def _max_or_none(values: Any) -> float | None:
     return max(numeric) if numeric else None
 
 
-def _rain_icon(
+WEATHER_ICON_PRIORITY = [
+    ("⛈️", {95, 96, 99}),
+    ("🌨️", {71, 73, 75, 77, 85, 86}),
+    ("🌧️", {56, 57, 61, 63, 65, 66, 67, 82}),
+    ("🌦️", {51, 53, 55, 80, 81}),
+    ("🌫️", {45, 48}),
+    ("☁️", {3}),
+    ("⛅️", {2}),
+    ("🌤️", {1}),
+    ("☀️", {0}),
+]
+
+
+def _weather_icon(values: list[dict[str, float | int | None]]) -> str:
+    """Return one overview icon based only on WMO weather codes."""
+    codes = {int(item["weather_code"]) for item in values}
+    for icon, weather_codes in WEATHER_ICON_PRIORITY:
+        if codes & weather_codes:
+            return icon
+    return "❓️"
+
+
+def _background_state(
     values: list[dict[str, float | int | None]], settings: dict[str, Any]
 ) -> str:
+    """Return the overview background state based only on precipitation."""
     max_precipitation = max(item["precipitation"] for item in values)
-    if any(item["weather_code"] in {71, 73, 75, 77, 85, 86} for item in values):
-        return "🌨️"
     if max_precipitation <= settings["no_rain_max_mm_per_hour"]:
-        if any(item["weather_code"] == 3 for item in values):
-            return "☁️"
-        return "☀️"
+        return "sunny"
     if max_precipitation <= settings["light_rain_max_mm_per_hour"]:
-        return "🌂️"
-    return "☂️"
+        return "light_rain"
+    return "rain"
 
 
 def _period_label(start: datetime, end: datetime) -> str:

@@ -18,7 +18,6 @@ def _settings(**overrides: object) -> dict:
         "light_rain_max_mm_per_hour": 2.0,
         "background": {
             "sunny": "#151515",
-            "cloudy": "#151515",
             "light_rain": "#10191b",
             "rain": "#0f1820",
         },
@@ -27,54 +26,64 @@ def _settings(**overrides: object) -> dict:
     return settings
 
 
-def test_rain_icon_thresholds_are_configurable() -> None:
+def test_weather_icon_is_based_only_on_weather_code() -> None:
+    sunny_with_heavy_rain = [
+        {"precipitation": 5.0, "probability": 100.0, "weather_code": 0}
+    ]
+    assert weather_module._weather_icon(sunny_with_heavy_rain) == "☀️"
+    assert weather_module._weather_icon(
+        [{"precipitation": 0.0, "probability": 0.0, "weather_code": 3}]
+    ) == "☁️"
+    assert weather_module._weather_icon(
+        [{"precipitation": 0.0, "probability": 0.0, "weather_code": 61}]
+    ) == "🌧️"
+    assert weather_module._weather_icon(
+        [{"precipitation": 0.0, "probability": 0.0, "weather_code": 71}]
+    ) == "🌨️"
+    assert weather_module._weather_icon(
+        [{"precipitation": 0.0, "probability": 0.0, "weather_code": 95}]
+    ) == "⛈️"
+
+
+def test_background_state_is_based_only_on_precipitation() -> None:
     settings = _settings()
-    clear = [{"precipitation": 0.0, "probability": 0.0, "weather_code": 0}]
-    cloudy = [{"precipitation": 0.0, "probability": 0.0, "weather_code": 3}]
-    assert weather_module._rain_icon(clear, settings) == "☀️"
-    assert weather_module._rain_icon(cloudy, settings) == "☁️"
-    assert weather_module._rain_icon(
-        [{"precipitation": 1.0, "probability": 10.0, "weather_code": 71}], settings
-    ) == "🌨️"
-    assert weather_module._rain_icon(
-        [{"precipitation": 0.0, "probability": 0.0, "weather_code": 71}], settings
-    ) == "🌨️"
-    assert weather_module._rain_icon(
-        [{"precipitation": 0.1, "probability": 10.0, "weather_code": 61}], settings
-    ) == "🌂️"
-    assert weather_module._rain_icon(
-        [{"precipitation": 2.0, "probability": 20.0, "weather_code": 61}], settings
-    ) == "🌂️"
-    assert weather_module._rain_icon(
-        [{"precipitation": 2.1, "probability": 30.0, "weather_code": 61}], settings
-    ) == "☂️"
+    assert weather_module._background_state(
+        [{"precipitation": 0.0, "probability": 0.0, "weather_code": 61}], settings
+    ) == "sunny"
+    assert weather_module._background_state(
+        [{"precipitation": 0.1, "probability": 0.0, "weather_code": 0}], settings
+    ) == "light_rain"
+    assert weather_module._background_state(
+        [{"precipitation": 2.0, "probability": 0.0, "weather_code": 0}], settings
+    ) == "light_rain"
+    assert weather_module._background_state(
+        [{"precipitation": 2.1, "probability": 0.0, "weather_code": 0}], settings
+    ) == "rain"
 
     custom = _settings(no_rain_max_mm_per_hour=0.2, light_rain_max_mm_per_hour=3.5)
-    assert weather_module._rain_icon(
+    assert weather_module._background_state(
         [{"precipitation": 0.2, "probability": 0.0, "weather_code": 0}], custom
-    ) == "☀️"
-    assert weather_module._rain_icon(
+    ) == "sunny"
+    assert weather_module._background_state(
         [{"precipitation": 0.21, "probability": 0.0, "weather_code": 0}], custom
-    ) == "🌂️"
-    assert weather_module._rain_icon(
-        [{"precipitation": 3.5, "probability": 0.0, "weather_code": 61}], custom
-    ) == "🌂️"
-    assert weather_module._rain_icon(
-        [{"precipitation": 3.51, "probability": 0.0, "weather_code": 61}], custom
-    ) == "☂️"
+    ) == "light_rain"
+    assert weather_module._background_state(
+        [{"precipitation": 3.5, "probability": 0.0, "weather_code": 0}], custom
+    ) == "light_rain"
+    assert weather_module._background_state(
+        [{"precipitation": 3.51, "probability": 0.0, "weather_code": 0}], custom
+    ) == "rain"
 
 
 def test_background_colors_can_be_supplied_without_loading_project_config() -> None:
     settings = _settings(
         background={
             "sunny": "#000000",
-            "cloudy": "#111111",
             "light_rain": "#222222",
             "rain": "#333333",
         }
     )
     assert settings["background"]["sunny"] == "#000000"
-    assert settings["background"]["cloudy"] == "#111111"
     assert settings["background"]["light_rain"] == "#222222"
     assert settings["background"]["rain"] == "#333333"
 
@@ -91,7 +100,6 @@ light_rain_max_mm_per_hour = 2.5
 
 [weather.background]
 sunny = "#000000"
-cloudy = "#010101"
 light_rain = "#020202"
 rain = "#030303"
 """,
@@ -166,6 +174,7 @@ def test_build_display_data_returns_six_hour_details_only() -> None:
     assert data["region"] == "テスト地域"
     assert data["period"]["label"] == "13～19時"
     assert data["current"]["icon"] == "🌨️"
+    assert data["current"]["background_state"] == "rain"
     assert data["current"]["max_precipitation_mm_per_hour"] == 2.1
     assert data["current"]["max_precipitation_probability"] == 70.0
     assert len(data["hours"]) == 6
@@ -271,6 +280,7 @@ def test_weather_endpoint_returns_forecast_without_project_settings(monkeypatch)
     assert result["data"]["region"] == "テスト地域"
     assert len(result["data"]["hours"]) == 6
     assert result["data"]["current"]["icon"] == "☁️"
+    assert result["data"]["current"]["background_state"] == "sunny"
     assert "daily" not in result["data"]
 
 
@@ -280,10 +290,14 @@ def test_weather_template_contains_hourly_detail_without_daily_forecast() -> Non
     css = Path("web/static/features/weather/weather.css").read_text(encoding="utf-8")
 
     assert 'data-role="hours"' in html
+    assert 'data-bg-cloudy' not in html
     assert "1週間" not in html
     assert "daily" not in html
     assert "feature-weather__days" not in css
     assert "feature-weather__day" not in css
+    assert "repeat(6, minmax(0, 1fr))" in css
     assert "renderDays" not in js
     assert "data-role=\"days\"" not in js
     assert "daily" not in js
+    assert "setRainClass" not in js
+    assert "data-bg-cloudy" not in js
