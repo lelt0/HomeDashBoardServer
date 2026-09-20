@@ -133,11 +133,6 @@
       }
     }
 
-    var now = new Date();
-    detailTitle.textContent =
-      ('0' + now.getHours()).slice(-2) + ':' +
-      ('0' + now.getMinutes()).slice(-2) + 'から1時間ごと';
-
     function renderData(data, fetchedAt) {
       var current = data.current;
       var periodData = data.period;
@@ -229,6 +224,10 @@
     }
 
     function openDetail() {
+      var now = new Date();
+      detailTitle.textContent =
+        ('0' + now.getHours()).slice(-2) + ':' +
+        ('0' + now.getMinutes()).slice(-2) + 'から1時間ごと';
       overview.hidden = true;
       detail.hidden = false;
       root.setAttribute('data-detail-open', 'true');
