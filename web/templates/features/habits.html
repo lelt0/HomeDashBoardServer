@@ -1,0 +1,36 @@
+<div
+  class="tile__body feature-habits"
+  data-feature-root="habits"
+  data-day-boundary="{{ tile.context.settings.day_boundary }}"
+  data-display-emoji-count="{{ tile.context.settings.display_emoji_count }}"
+  data-log-horizontal-margin-px="{{ tile.context.settings.log_horizontal_margin_px }}"
+  data-record-horizontal-margin-px="{{ tile.context.settings.record_horizontal_margin_px }}"
+  data-state-url="/api/features/habits/state"
+>
+  <div
+    class="feature-habits__view feature-habits__view--overview"
+    data-habits-view="overview"
+    tabindex="0"
+    role="button"
+    aria-label="習慣ログ。タップで記録画面を表示"
+  >
+    <div class="feature-habits__empty" data-role="overview-empty" hidden>習慣なし</div>
+    <div class="feature-habits__habit-list" data-role="habit-list"></div>
+  </div>
+
+  <div class="feature-habits__view feature-habits__view--record" data-habits-view="record" hidden>
+    <div class="feature-habits__record-toolbar">
+      <div class="feature-habits__record-date-controls">
+        <button type="button" class="button feature-habits__date-button" data-action="previous-day" aria-label="前の習慣日">‹</button>
+        <input type="date" class="feature-habits__date-input" data-role="selected-date" aria-label="記録する習慣日">
+        <button type="button" class="button feature-habits__today-button" data-action="today" aria-label="今日の習慣日へ移動">今日に移動</button>
+        <button type="button" class="button feature-habits__date-button" data-action="next-day" aria-label="次の習慣日">›</button>
+      </div>
+      <button type="button" class="button feature-habits__back-button" data-action="close-record">戻る</button>
+    </div>
+    <div class="feature-habits__record-list" data-role="record-list"></div>
+  </div>
+
+  <div class="feature-habits__milestone" data-role="milestone" aria-live="polite" hidden></div>
+  <div class="feature-habits__error" data-role="error" hidden></div>
+</div>

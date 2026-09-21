@@ -1,0 +1,28 @@
+[habit_tracker]
+# 表示する実績アイコンの総文字数。期間数ではありません。
+display_emoji_count = 12
+# ログ画面・記録画面の左右マージン（px）。
+log_horizontal_margin_px = 72
+record_horizontal_margin_px = 72
+# 習慣日の切り替え時刻。日本時間で解釈します。
+day_boundary = "06:00"
+
+# 習慣は0～4件まで設定できます。
+# 例:
+# [[habits]]
+# id = "training"
+# name = "筋トレ"
+# emoji = "💪"
+# period = "week" # day | week | month
+# target_count = 1
+# tree_milestone_streak = 4
+# best_streak_reset_date = "2026-01-01"
+
+[[habits]]
+id = "training"
+name = "筋トレ"
+emoji = "💪"
+period = "week"
+target_count = 1
+tree_milestone_streak = 4
+best_streak_reset_date = "2026-01-01"
