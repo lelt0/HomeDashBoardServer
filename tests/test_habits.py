@@ -376,8 +376,14 @@ def test_habit_ui_keeps_record_layout_requirements() -> None:
     assert "feature-habits__record-icon-column" in script
     assert "feature-habits__adjust-group" in script
     assert "selected_occurrences" in script
+    assert "if (overview.hidden) return;" in script
+    assert "scheduleOverviewEmojiFit();" in script
+    assert "Math.max(14, Math.min(48, Math.floor(window.innerWidth * 0.055)))" in script
     assert "feature-habits__progress-icon--active" in script
     assert "feature-habits__progress-icon--dim" in script
+    assert "grid-template-rows: repeat(var(--habit-count, 1), minmax(0, 1fr));" in css
+    assert "flex-direction: column;" in css
+    assert "justify-content: center;" in css
     assert "justify-content: flex-start;" in css
     assert "feature-habits__record-item" in css
     assert "--habits-log-horizontal-margin" in css

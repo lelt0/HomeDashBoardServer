@@ -142,7 +142,7 @@
       if (!state) return;
       renderOverview();
       renderRecord();
-      fitOverviewEmojis();
+      scheduleOverviewEmojiFit();
       if (recordOpen && dateInput.value !== state.selected_habit_day) {
         dateInput.value = state.selected_habit_day;
       }
@@ -374,22 +374,20 @@
     }
 
     function fitOverviewEmojis() {
+      if (overview.hidden) return;
       var lists = habitList.querySelectorAll('.feature-habits__emoji-list');
       lists.forEach(function (list) {
-        var max = Math.max(14, Math.min(48, Math.floor(window.innerWidth * 0.055)));
-        var min = 10;
-        var best = min;
-        while (min <= max) {
-          var size = Math.floor((min + max) / 2);
-          list.style.setProperty('--habit-emoji-size', size + 'px');
-          if (list.scrollHeight <= list.clientHeight + 1 && list.scrollWidth <= list.clientWidth + 1) {
-            best = size;
-            min = size + 1;
-          } else {
-            max = size - 1;
-          }
-        }
-        list.style.setProperty('--habit-emoji-size', best + 'px');
+        var size = Math.max(14, Math.min(48, Math.floor(window.innerWidth * 0.055)));
+        list.style.setProperty('--habit-emoji-size', size + 'px');
+      });
+    }
+
+    function scheduleOverviewEmojiFit() {
+      var schedule = window.requestAnimationFrame || function (callback) {
+        return window.setTimeout(callback, 0);
+      };
+      schedule(function () {
+        fitOverviewEmojis();
       });
     }
 
@@ -422,6 +420,7 @@
       recordOpen = false;
       overview.hidden = false;
       recordView.hidden = true;
+      scheduleOverviewEmojiFit();
       if (closeTimer !== null) {
         window.clearTimeout(closeTimer);
         closeTimer = null;
@@ -547,7 +546,9 @@
       }
     });
 
-    window.addEventListener('resize', fitOverviewEmojis);
+    window.addEventListener('resize', function () {
+      if (!overview.hidden) fitOverviewEmojis();
+    });
 
     dateInput.max = currentHabitDate();
     fetchState(null);

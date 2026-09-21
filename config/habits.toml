@@ -1,6 +1,6 @@
 [habit_tracker]
 # 表示する実績アイコンの総文字数。期間数ではありません。
-display_emoji_count = 12
+display_emoji_count = 18
 # ログ画面・記録画面の左右マージン（px）。
 log_horizontal_margin_px = 72
 record_horizontal_margin_px = 72
