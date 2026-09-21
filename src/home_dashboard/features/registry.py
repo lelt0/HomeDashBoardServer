@@ -3,6 +3,8 @@ from typing import Any, Callable
 
 from fastapi import APIRouter
 
+from home_dashboard.features.habits import load_feature_context as load_habits_feature_context
+from home_dashboard.features.habits import router as habits_router
 from home_dashboard.features.trash import load_feature_context
 from home_dashboard.features.weather import load_feature_context as load_weather_feature_context
 from home_dashboard.features.weather import router as weather_router
@@ -26,12 +28,13 @@ FEATURES: dict[str, FeatureDefinition] = {
         styles=("/static/features/clock/clock.css",),
         scripts=("/static/features/clock/clock.js",),
     ),
-    "interaction": FeatureDefinition(
-        title="タッチ操作",
-        template="features/interaction.html",
-        styles=("/static/features/interaction/interaction.css",),
-        scripts=("/static/features/interaction/interaction.js",),
-        page_template="pages/features/interaction.html",
+    "habits": FeatureDefinition(
+        title="習慣ログ",
+        template="features/habits.html",
+        styles=("/static/features/habits/habits.css",),
+        scripts=("/static/features/habits/habits.js",),
+        context_factory=load_habits_feature_context,
+        router=habits_router,
     ),
     "scroll": FeatureDefinition(
         title="スクロール",
@@ -53,7 +56,7 @@ FEATURES: dict[str, FeatureDefinition] = {
         router=weather_router,
     ),
     "trash": FeatureDefinition(
-        title="ゴミ回収日",
+        title="ゴミ回収",
         template="features/trash.html",
         styles=("/static/features/trash/trash.css",),
         scripts=("/static/features/trash/trash.js",),

@@ -51,7 +51,7 @@
     }
 
     function formatDate(date, tomorrow) {
-      var prefix = tomorrow ? '明日 ' : '';
+      var prefix = tomorrow ? '明日　' : '';
       return prefix + weekdayLabel(date);
     }
 

@@ -11,3 +11,7 @@ wheels/
 
 # Project local
 .github/
+# Local SQLite database
+data/*.db
+data/*.sqlite
+data/*.sqlite3
