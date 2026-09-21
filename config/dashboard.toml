@@ -18,8 +18,8 @@ feature = "trash"
 col_span = 2
 
 [[tiles]]
-id = "interaction"
-feature = "interaction"
+id = "habits"
+feature = "habits"
 col_span = 2
 
 [[tiles]]

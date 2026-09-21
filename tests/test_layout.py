@@ -7,6 +7,6 @@ def test_layout_has_tiles() -> None:
     assert [tile["id"] for tile in layout["tiles"]] == [
         "weather",
         "trash",
-        "interaction",
+        "habits",
         "scroll",
     ]
