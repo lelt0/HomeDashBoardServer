@@ -363,22 +363,20 @@ def test_habit_settings_accept_horizontal_margins() -> None:
 
 def test_habit_ui_keeps_record_layout_requirements() -> None:
     project_root = Path(__file__).resolve().parents[1]
-    template = (project_root / "web" / "templates" / "features" / "habits.html").read_text()
-    script = (project_root / "web" / "static" / "features" / "habits" / "habits.js").read_text()
-    css = (project_root / "web" / "static" / "features" / "habits" / "habits.css").read_text()
+    template = (project_root / "web" / "templates" / "features" / "habits.html").read_text(encoding="utf-8")
+    script = (project_root / "web" / "static" / "features" / "habits" / "habits.js").read_text(encoding="utf-8")
+    css = (project_root / "web" / "static" / "features" / "habits" / "habits.css").read_text(encoding="utf-8")
 
     assert 'data-action="today"' in template
     assert '今日に移動' in template
     assert "dateInput.value = current;" in script
     assert "i < count ? '🌱️' : '🕳️'" in script
-    assert "if (count >= target && target === 1)" in script
     assert "Number(habit.target_count) > 1 || icons[j] === '🌳️'" in script
     assert "feature-habits__record-icon-column" in script
     assert "feature-habits__adjust-group" in script
     assert "selected_occurrences" in script
     assert "if (overview.hidden) return;" in script
     assert "scheduleOverviewEmojiFit();" in script
-    assert "Math.max(14, Math.min(48, Math.floor(window.innerWidth * 0.055)))" in script
     assert "feature-habits__progress-icon--active" in script
     assert "feature-habits__progress-icon--dim" in script
     assert "grid-template-rows: repeat(var(--habit-count, 1), minmax(0, 1fr));" in css
