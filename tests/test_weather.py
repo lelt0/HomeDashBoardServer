@@ -119,12 +119,12 @@ rain = "#030303"
 
 def test_period_label_crosses_midnight() -> None:
     start = datetime(2026, 9, 18, 23, tzinfo=JST)
-    assert weather_module._period_label(start, start.replace(day=19, hour=5)) == "23～翌5時"
+    assert weather_module._period_label(start, start.replace(day=19, hour=5)) == "23時～翌5時"
 
 
 def test_period_label_same_day() -> None:
     start = datetime(2026, 9, 18, 13, tzinfo=JST)
-    assert weather_module._period_label(start, start.replace(hour=19)) == "13～19時"
+    assert weather_module._period_label(start, start.replace(hour=19)) == "13時～19時"
 
 
 def test_hour_label() -> None:
@@ -172,7 +172,7 @@ def test_build_display_data_returns_six_hour_details_only() -> None:
     data = weather_module._build_display_data(payload, _settings(), fetched_at)
 
     assert data["region"] == "テスト地域"
-    assert data["period"]["label"] == "13～19時"
+    assert data["period"]["label"] == "13時～19時"
     assert data["current"]["icon"] == "🌨️"
     assert data["current"]["background_state"] == "rain"
     assert data["current"]["max_precipitation_mm_per_hour"] == 2.1
