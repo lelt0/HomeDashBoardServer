@@ -173,16 +173,14 @@
     function progressToEmojis(habit) {
       var target = Number(habit.target_count) || 1;
       var count = Math.max(0, Number(habit.period_count) || 0);
-      if (count >= target && target === 1) {
-        return ['🌳️'];
-      }
-      if (target === 1) {
-        return ['🕳️'];
-      }
-      count = Math.min(count, target);
+      var iconCount = Math.max(target, count);
       var result = [];
-      for (var i = 0; i < target; i += 1) {
-        result.push(i < count ? '🌱️' : '🕳️');
+      for (var i = 0; i < iconCount; i += 1) {
+        if (target === 1 && i === 0 && count > 0) {
+          result.push('🌳️');
+        } else {
+          result.push(i < count ? '🌱️' : '🕳️');
+        }
       }
       return result;
     }
@@ -333,7 +331,8 @@
           if (icons[j] === '🕳️') {
             iconButton.setAttribute('data-action', 'add-one');
             iconButton.setAttribute('data-habit-id', habit.id);
-          } else if ((habit.day_count || 0) > 0 && (Number(habit.target_count) > 1 || icons[j] === '🌳️')) {
+          } else if ((habit.day_count || 0) > 0 &&
+              (Number(habit.target_count) > 1 || icons[j] === '🌳️' || icons[j] === '🌱️')) {
             iconButton.setAttribute('data-action', 'remove-one');
             iconButton.setAttribute('data-habit-id', habit.id);
           } else {
