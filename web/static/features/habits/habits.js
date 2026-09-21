@@ -377,7 +377,7 @@
       if (overview.hidden) return;
       var lists = habitList.querySelectorAll('.feature-habits__emoji-list');
       lists.forEach(function (list) {
-        var size = Math.max(14, Math.min(48, Math.floor(window.innerWidth * 0.055)));
+        var size = Math.max(14, Math.min(48, Math.floor(window.innerWidth * 0.025)));
         list.style.setProperty('--habit-emoji-size', size + 'px');
       });
     }
