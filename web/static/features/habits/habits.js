@@ -393,7 +393,7 @@
 
     function showMilestone() {
       if (!state || !state.habits || state.habits.length === 0) return;
-      milestone.textContent = '✨';
+      milestone.textContent = '✨️';
       milestone.hidden = false;
       milestone.classList.remove('is-visible');
       void milestone.offsetWidth;

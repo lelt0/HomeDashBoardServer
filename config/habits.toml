@@ -12,7 +12,7 @@ day_boundary = "06:00"
 # [[habits]]
 # id = "training"
 # name = "筋トレ"
-# emoji = "💪"
+# emoji = "💪️"
 # period = "week" # day | week | month
 # target_count = 1
 # tree_milestone_streak = 4
@@ -21,7 +21,7 @@ day_boundary = "06:00"
 [[habits]]
 id = "training"
 name = "筋トレ"
-emoji = "💪"
+emoji = "💪️"
 period = "week"
 target_count = 1
 tree_milestone_streak = 4
