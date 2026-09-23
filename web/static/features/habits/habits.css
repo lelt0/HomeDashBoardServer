@@ -47,17 +47,10 @@
 
 .feature-habits__habit {
   display: grid;
-  grid-template-columns: clamp(52px, 10vw, 84px) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   min-height: 0;
   overflow: hidden;
   padding: 8px 4px;
-}
-
-.feature-habits__habit-icon-column {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 0;
 }
 
 .feature-habits__habit-icon,
@@ -68,7 +61,8 @@
 }
 
 .feature-habits__habit-icon {
-  font-size: clamp(2rem, 6vw, 3.8rem);
+  flex: 0 0 auto;
+  font-size: clamp(1rem, 2.5vw, 1.4rem);
   line-height: 1;
 }
 
@@ -211,23 +205,15 @@
 
 .feature-habits__record-item {
   display: grid;
-  grid-template-columns: clamp(44px, 10vw, 72px) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: 8px;
   min-width: 0;
   padding: 8px 2px 12px;
 }
 
-.feature-habits__record-icon-column {
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  min-width: 0;
-  padding-top: 2px;
-}
-
 .feature-habits__record-habit-icon {
   font-family: "HomeDashboardEmoji", sans-serif;
-  font-size: clamp(1.8rem, 5vw, 3rem);
+  font-size: clamp(1rem, 2.5vw, 1.35rem);
   line-height: 1;
 }
 
@@ -374,17 +360,12 @@
 
 @media (max-width: 520px) {
   .feature-habits__habit {
-    grid-template-columns: 44px minmax(0, 1fr);
     padding-left: 0;
     padding-right: 0;
   }
 
   .feature-habits__stats {
     flex-basis: 68px;
-  }
-
-  .feature-habits__record-item {
-    grid-template-columns: 40px minmax(0, 1fr);
   }
 
   .feature-habits__record-summary {

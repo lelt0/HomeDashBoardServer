@@ -202,25 +202,22 @@
         item.className = 'feature-habits__habit';
         item.setAttribute('data-habit-id', habit.id);
 
-        var iconColumn = document.createElement('div');
-        iconColumn.className = 'feature-habits__habit-icon-column';
-        var largeIcon = document.createElement('span');
-        largeIcon.className = 'feature-habits__habit-icon';
-        largeIcon.textContent = habit.emoji;
-        largeIcon.setAttribute('aria-hidden', 'true');
-        iconColumn.appendChild(largeIcon);
-
         var main = document.createElement('div');
         main.className = 'feature-habits__habit-main';
 
         var header = document.createElement('div');
         header.className = 'feature-habits__habit-header';
+        var habitIcon = document.createElement('span');
+        habitIcon.className = 'feature-habits__habit-icon';
+        habitIcon.textContent = habit.emoji;
+        habitIcon.setAttribute('aria-hidden', 'true');
         var name = document.createElement('div');
         name.className = 'feature-habits__habit-name';
         name.textContent = habit.name;
         var rule = document.createElement('div');
         rule.className = 'feature-habits__habit-rule';
         rule.textContent = habit.rule_text;
+        header.appendChild(habitIcon);
         header.appendChild(name);
         header.appendChild(rule);
 
@@ -258,7 +255,6 @@
         bottom.appendChild(stats);
         main.appendChild(header);
         main.appendChild(bottom);
-        item.appendChild(iconColumn);
         item.appendChild(main);
         habitList.appendChild(item);
 
@@ -284,19 +280,17 @@
         item.className = 'feature-habits__record-item';
         item.setAttribute('data-habit-id', habit.id);
 
-        var iconColumn = document.createElement('div');
-        iconColumn.className = 'feature-habits__record-icon-column';
         var habitIcon = document.createElement('span');
         habitIcon.className = 'feature-habits__record-habit-icon';
         habitIcon.textContent = habit.emoji;
         habitIcon.setAttribute('aria-hidden', 'true');
-        iconColumn.appendChild(habitIcon);
 
         var main = document.createElement('div');
         main.className = 'feature-habits__record-main';
 
         var header = document.createElement('div');
         header.className = 'feature-habits__record-header';
+        header.appendChild(habitIcon);
         var name = document.createElement('div');
         name.className = 'feature-habits__record-name';
         name.textContent = habit.name;
@@ -366,7 +360,6 @@
         controls.appendChild(adjust);
         main.appendChild(header);
         main.appendChild(controls);
-        item.appendChild(iconColumn);
         item.appendChild(main);
         recordList.appendChild(item);
       }

@@ -372,7 +372,9 @@ def test_habit_ui_keeps_record_layout_requirements() -> None:
     assert "dateInput.value = current;" in script
     assert "i < count ? '🌱️' : '🕳️'" in script
     assert "Number(habit.target_count) > 1 || icons[j] === '🌳️'" in script
-    assert "feature-habits__record-icon-column" in script
+    assert "header.appendChild(habitIcon);" in script
+    assert "iconColumn" not in script
+    assert "item.appendChild(iconColumn);" not in script
     assert "feature-habits__adjust-group" in script
     assert "selected_occurrences" in script
     assert "if (overview.hidden) return;" in script
@@ -384,5 +386,7 @@ def test_habit_ui_keeps_record_layout_requirements() -> None:
     assert "justify-content: center;" in css
     assert "justify-content: flex-start;" in css
     assert "feature-habits__record-item" in css
+    assert "grid-template-columns: clamp(52px, 10vw, 84px)" not in css
+    assert "grid-template-columns: clamp(44px, 10vw, 72px)" not in css
     assert "--habits-log-horizontal-margin" in css
     assert "--habits-record-horizontal-margin" in css
