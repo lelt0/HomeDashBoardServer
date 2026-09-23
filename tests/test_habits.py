@@ -197,7 +197,7 @@ def test_record_summary_uses_requested_relative_words() -> None:
         now=datetime(2026, 9, 21, 12, 0, tzinfo=JST),
     )
     assert week_service.build_state(date(2026, 9, 20))["record"]["habits"][0]["progress_text"] == \
-        "先週 1/2 この日 0"
+        "先週 1/2　7日目 0"
 
     month = _habit(habit_id="reading", period="month", target_count=2)
     month_service = HabitService(
@@ -206,7 +206,7 @@ def test_record_summary_uses_requested_relative_words() -> None:
         now=datetime(2026, 9, 21, 12, 0, tzinfo=JST),
     )
     assert month_service.build_state(date(2026, 8, 20))["record"]["habits"][0]["progress_text"] == \
-        "先月 1/2 この日 0"
+        "先月 1/2　20日目 0"
 
     day = _habit(habit_id="english", period="day", target_count=1)
     day_service = HabitService(
