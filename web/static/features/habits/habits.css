@@ -270,6 +270,10 @@
   font-size: 1.25rem;
 }
 
+.feature-habits__adjust-group .feature-habits__adjust:last-child {
+  min-width: 132px;
+}
+
 .feature-habits__progress {
   min-width: 0;
   flex: 1 1 auto;
