@@ -66,8 +66,8 @@ class MemoryRepository:
 def _settings(
     *habits: HabitDefinition,
     display_emoji_count: int = 12,
-    log_margin: int = 12,
-    record_margin: int = 12,
+    log_margin: float = 12,
+    record_margin: float = 12,
 ) -> HabitSettings:
     return HabitSettings(
         display_emoji_count, time(6, 0), log_margin, record_margin, tuple(habits)
@@ -353,12 +353,12 @@ def test_habit_settings_accept_horizontal_margins() -> None:
         "habit_tracker": {
             "display_emoji_count": 12,
             "day_boundary": "06:00",
-            "log_horizontal_margin_px": 17,
-            "record_horizontal_margin_px": 23,
+            "log_horizontal_margin_percent": 17,
+            "record_horizontal_margin_percent": 23,
         }
     })
-    assert settings.log_horizontal_margin_px == 17
-    assert settings.record_horizontal_margin_px == 23
+    assert settings.log_horizontal_margin_percent == 17
+    assert settings.record_horizontal_margin_percent == 23
 
 
 def test_habit_ui_keeps_record_layout_requirements() -> None:

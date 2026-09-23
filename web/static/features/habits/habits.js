@@ -16,9 +16,9 @@
     var recordOpen = false;
 
     root.style.setProperty('--habits-log-horizontal-margin',
-      (root.getAttribute('data-log-horizontal-margin-px') || '12') + 'px');
+      (root.getAttribute('data-log-horizontal-margin-percent') || '12') + '%');
     root.style.setProperty('--habits-record-horizontal-margin',
-      (root.getAttribute('data-record-horizontal-margin-px') || '12') + 'px');
+      (root.getAttribute('data-record-horizontal-margin-percent') || '12') + '%');
     var refreshTimer = null;
     var boundaryTimer = null;
     var closeTimer = null;
