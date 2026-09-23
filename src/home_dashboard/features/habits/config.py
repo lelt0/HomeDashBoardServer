@@ -29,8 +29,8 @@ class HabitDefinition:
 class HabitSettings:
     display_emoji_count: int
     day_boundary: time
-    log_horizontal_margin_px: int
-    record_horizontal_margin_px: int
+    log_horizontal_margin_percent: float
+    record_horizontal_margin_percent: float
     habits: tuple[HabitDefinition, ...]
 
 
@@ -52,12 +52,12 @@ def parse_settings(config: dict[str, Any]) -> HabitSettings:
 
     day_boundary = _parse_time(str(common.get("day_boundary", "06:00")))
 
-    log_horizontal_margin_px = int(common.get("log_horizontal_margin_px", 12))
-    record_horizontal_margin_px = int(common.get("record_horizontal_margin_px", 12))
-    if log_horizontal_margin_px < 0:
-        raise ValueError("habit_tracker.log_horizontal_margin_px must be >= 0")
-    if record_horizontal_margin_px < 0:
-        raise ValueError("habit_tracker.record_horizontal_margin_px must be >= 0")
+    log_horizontal_margin_percent = float(common.get("log_horizontal_margin_percent", 12))
+    record_horizontal_margin_percent = float(common.get("record_horizontal_margin_percent", 12))
+    if log_horizontal_margin_percent < 0:
+        raise ValueError("habit_tracker.log_horizontal_margin_percent must be >= 0")
+    if record_horizontal_margin_percent < 0:
+        raise ValueError("habit_tracker.record_horizontal_margin_percent must be >= 0")
 
     raw_habits = config.get("habits", [])
     if not isinstance(raw_habits, list):
@@ -126,8 +126,8 @@ def parse_settings(config: dict[str, Any]) -> HabitSettings:
     return HabitSettings(
         display_emoji_count=display_emoji_count,
         day_boundary=day_boundary,
-        log_horizontal_margin_px=log_horizontal_margin_px,
-        record_horizontal_margin_px=record_horizontal_margin_px,
+        log_horizontal_margin_percent=log_horizontal_margin_percent,
+        record_horizontal_margin_percent=record_horizontal_margin_percent,
         habits=tuple(definitions),
     )
 
