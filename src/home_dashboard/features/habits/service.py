@@ -128,9 +128,10 @@ class HabitService:
             else:
                 progress_text = f"この日 {period_count}/{habit.target_count}"
         else:
+            period_day = (selected_habit_day - selected_period.start).days + 1
             progress_text = (
-                f"{period_label} {period_count}/{habit.target_count} "
-                f"この日 {len(selected_records)}"
+                f"{period_label} {period_count}/{habit.target_count}　"
+                f"{period_day}日目 {len(selected_records)}"
             )
 
         return {

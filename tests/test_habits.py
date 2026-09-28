@@ -66,8 +66,8 @@ class MemoryRepository:
 def _settings(
     *habits: HabitDefinition,
     display_emoji_count: int = 12,
-    log_margin: int = 12,
-    record_margin: int = 12,
+    log_margin: float = 12,
+    record_margin: float = 12,
 ) -> HabitSettings:
     return HabitSettings(
         display_emoji_count, time(6, 0), log_margin, record_margin, tuple(habits)
@@ -197,7 +197,7 @@ def test_record_summary_uses_requested_relative_words() -> None:
         now=datetime(2026, 9, 21, 12, 0, tzinfo=JST),
     )
     assert week_service.build_state(date(2026, 9, 20))["record"]["habits"][0]["progress_text"] == \
-        "先週 1/2 この日 0"
+        "先週 1/2　7日目 0"
 
     month = _habit(habit_id="reading", period="month", target_count=2)
     month_service = HabitService(
@@ -206,7 +206,7 @@ def test_record_summary_uses_requested_relative_words() -> None:
         now=datetime(2026, 9, 21, 12, 0, tzinfo=JST),
     )
     assert month_service.build_state(date(2026, 8, 20))["record"]["habits"][0]["progress_text"] == \
-        "先月 1/2 この日 0"
+        "先月 1/2　20日目 0"
 
     day = _habit(habit_id="english", period="day", target_count=1)
     day_service = HabitService(
@@ -353,32 +353,32 @@ def test_habit_settings_accept_horizontal_margins() -> None:
         "habit_tracker": {
             "display_emoji_count": 12,
             "day_boundary": "06:00",
-            "log_horizontal_margin_px": 17,
-            "record_horizontal_margin_px": 23,
+            "log_horizontal_margin_percent": 17,
+            "record_horizontal_margin_percent": 23,
         }
     })
-    assert settings.log_horizontal_margin_px == 17
-    assert settings.record_horizontal_margin_px == 23
+    assert settings.log_horizontal_margin_percent == 17
+    assert settings.record_horizontal_margin_percent == 23
 
 
 def test_habit_ui_keeps_record_layout_requirements() -> None:
     project_root = Path(__file__).resolve().parents[1]
-    template = (project_root / "web" / "templates" / "features" / "habits.html").read_text()
-    script = (project_root / "web" / "static" / "features" / "habits" / "habits.js").read_text()
-    css = (project_root / "web" / "static" / "features" / "habits" / "habits.css").read_text()
+    template = (project_root / "web" / "templates" / "features" / "habits.html").read_text(encoding="utf-8")
+    script = (project_root / "web" / "static" / "features" / "habits" / "habits.js").read_text(encoding="utf-8")
+    css = (project_root / "web" / "static" / "features" / "habits" / "habits.css").read_text(encoding="utf-8")
 
     assert 'data-action="today"' in template
     assert '今日に移動' in template
     assert "dateInput.value = current;" in script
     assert "i < count ? '🌱️' : '🕳️'" in script
-    assert "if (count >= target && target === 1)" in script
     assert "Number(habit.target_count) > 1 || icons[j] === '🌳️'" in script
-    assert "feature-habits__record-icon-column" in script
+    assert "header.appendChild(habitIcon);" in script
+    assert "iconColumn" not in script
+    assert "item.appendChild(iconColumn);" not in script
     assert "feature-habits__adjust-group" in script
     assert "selected_occurrences" in script
     assert "if (overview.hidden) return;" in script
     assert "scheduleOverviewEmojiFit();" in script
-    assert "Math.max(14, Math.min(48, Math.floor(window.innerWidth * 0.055)))" in script
     assert "feature-habits__progress-icon--active" in script
     assert "feature-habits__progress-icon--dim" in script
     assert "grid-template-rows: repeat(var(--habit-count, 1), minmax(0, 1fr));" in css
@@ -386,5 +386,7 @@ def test_habit_ui_keeps_record_layout_requirements() -> None:
     assert "justify-content: center;" in css
     assert "justify-content: flex-start;" in css
     assert "feature-habits__record-item" in css
+    assert "grid-template-columns: clamp(52px, 10vw, 84px)" not in css
+    assert "grid-template-columns: clamp(44px, 10vw, 72px)" not in css
     assert "--habits-log-horizontal-margin" in css
     assert "--habits-record-horizontal-margin" in css

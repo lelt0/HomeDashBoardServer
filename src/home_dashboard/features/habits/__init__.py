@@ -21,8 +21,8 @@ def load_feature_context() -> dict[str, Any]:
         "settings": {
             "display_emoji_count": settings.display_emoji_count,
             "day_boundary": settings.day_boundary.strftime("%H:%M"),
-            "log_horizontal_margin_px": settings.log_horizontal_margin_px,
-            "record_horizontal_margin_px": settings.record_horizontal_margin_px,
+            "log_horizontal_margin_percent": settings.log_horizontal_margin_percent,
+            "record_horizontal_margin_percent": settings.record_horizontal_margin_percent,
             "habits": [
                 {
                     "id": habit.id,
