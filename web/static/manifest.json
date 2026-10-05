@@ -1,0 +1,6 @@
+{
+  "name": "Home Dashboard",
+  "short_name": "HomeDash",
+  "start_url": "/",
+  "display": "fullscreen"
+}
